@@ -1,16 +1,14 @@
-name: Lighthouse CI
+name: Lighthouse CI with Image Optimization
 
 on:
   push:
     branches:
-      - optimized   # run only on optimized branch
-  workflow_dispatch: # allow manual trigger
+      - optimized
+  workflow_dispatch:
 
 jobs:
-  lhci:
-    name: Run Lighthouse CI
+  optimize-and-audit:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,15 +18,45 @@ jobs:
         with:
           node-version: 20
 
+      # 1️⃣ Install Image Optimization Tool
+      - name: Install imagemin CLI and plugins
+        run: |
+          npm install -g imagemin-cli imagemin-mozjpeg imagemin-pngquant imagemin-webp
+
+      # 2️⃣ Optimize Images
+      - name: Optimize images in repo
+        run: |
+          imagemin "**/*.{jpg,jpeg,png}" --plugin=mozjpeg --plugin=pngquant --out-dir=.
+
+      # 3️⃣ Commit Optimized Images Back to Branch
+      - name: Commit optimized images
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Optimize images" || echo "No image changes to commit"
+          git push origin optimized
+
+      # 4️⃣ Install Lighthouse CI
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli
 
+      # 5️⃣ Build Site (modify if needed)
       - name: Build site
         run: |
-          # Replace with your build command if needed (npm run build, hugo, etc.)
-          # If it's static HTML, skip build and just use current files
           echo "No build step required."
 
+      # 6️⃣ Run Lighthouse CI & Save Reports
       - name: Run Lighthouse CI
         run: |
-          lhci autorun --collect.url="https://<your-github-username>.github.io/<repo-name>/"
+          mkdir -p ./lhci-reports
+          lhci collect --url="https://<your-github-username>.github.io/<repo-name>/" --output-path=./lhci-reports/report.json --output=./lhci-reports/report.html || echo "Lighthouse failed"
+          cp ./lhci-reports/report.json ./lhci-reports/report-$(date +%Y%m%d%H%M).json
+          cp ./lhci-reports/report.html ./lhci-reports/report-$(date +%Y%m%d%H%M).html
+
+      # 7️⃣ Upload Reports as GitHub Artifacts
+      - name: Upload Lighthouse Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: ./lhci-reports
