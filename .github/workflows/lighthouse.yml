@@ -26,7 +26,8 @@ jobs:
       - name: Copy site to optimized directory
         run: |
           mkdir -p optimized
-          cp -r * optimized/
+          shopt -s extglob
+          cp -r !(optimized) optimized/
 
       # 3️⃣ Minify HTML (PHP & HTML files)
       - name: Minify HTML files
