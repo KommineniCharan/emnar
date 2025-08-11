@@ -61,12 +61,20 @@ jobs:
       - name: Optimize Images
         run: |
           mkdir -p optimized_images
-          find images -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) | while read -r img; do
-            filename=$(basename "$img")
-            dir=$(dirname "$img")
-            mkdir -p "optimized_images/$dir"
-            npx @squoosh/cli --webp '{}' --avif '{}' "$img" -d "optimized_images/$dir"
+          find images -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | while read -r img; do
+            # Get relative path without leading "images/"
+            rel_path="${img#images/}"
+            # Get directory path of relative file
+            rel_dir=$(dirname "$rel_path")
+
+            # Make sure output directory exists inside optimized_images
+            mkdir -p "optimized_images/$rel_dir"
+
+            # Optimize image to WebP and AVIF, output to corresponding folder
+            npx @squoosh/cli --webp --avif "$img" -d "optimized_images/$rel_dir"
           done
+
+          # Optionally overwrite original images with optimized ones
           rsync -a optimized_images/ images/
 
       # 8. Add lazy loading to <img> tags
@@ -85,16 +93,18 @@ jobs:
             "
           done
 
-      # 9. Generate responsive `srcset` for images
+            # 9. Generate Responsive Images
       - name: Generate Responsive Images
         run: |
-          find images -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | while read -r img; do
-            dir=$(dirname "$img")
+          find images -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) | while read -r img; do
+            rel_path="${img#images/}"
+            rel_dir=$(dirname "$rel_path")
             for size in 320 640 1024; do
-              mkdir -p "$dir/${size}w"
-              npx @squoosh/cli --resize "{\"width\":$size}" "$img" -d "$dir/${size}w"
+              mkdir -p "images/$rel_dir/${size}w"
+              npx @squoosh/cli --resize "{\"width\":$size}" "$img" -d "images/$rel_dir/${size}w"
             done
           done
+
 
       # 10. Run Lighthouse on all pages
       - name: Lighthouse CI
