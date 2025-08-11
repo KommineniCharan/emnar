@@ -8,64 +8,71 @@ on:
 jobs:
   optimize:
     runs-on: ubuntu-latest
+
     steps:
       # 1. Checkout your code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js
+      # 2. Setup Node.js (use v16 for Squoosh WASM compatibility)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '16'
 
       # 3. Install dependencies for optimization
       - name: Install Optimization Tools
         run: |
           npm install -g html-minifier-terser clean-css-cli terser \
-          purgecss @squoosh/cli@0.7.1 cheerio
+          purgecss @squoosh/cli@0.7.1 cheerio @lhci/cli
 
       # 4. Optimize HTML files
       - name: Minify HTML
         run: |
-          find . -name "*.html" -o -name "*.php" | while read file; do
+          find . \( -name "*.html" -o -name "*.php" \) | while read -r file; do
             html-minifier-terser --collapse-whitespace --remove-comments \
               --minify-js true --minify-css true \
-              --file-ext html,php --input-dir "$(dirname "$file")" \
-              --output-dir "$(dirname "$file")"
+              --input-dir "$(dirname "$file")" \
+              --output-dir "$(dirname "$file")" \
+              --file-ext html,php
           done
 
       # 5. Optimize CSS (remove unused Bootstrap + custom CSS)
       - name: Purge & Minify CSS
         run: |
-          find css -name "*.css" | while read file; do
-            purgecss --css "$file" --content "**/*.php" "**/*.html" "**/*.js" \
-              --output css
-            cleancss -o "$file" "$file"
-          done
+          if [ -d css ]; then
+            find css -name "*.css" | while read -r file; do
+              purgecss --css "$file" --content "**/*.php" "**/*.html" "**/*.js" \
+                --output css
+              cleancss -o "$file" "$file"
+            done
+          fi
 
       # 6. Minify JS
       - name: Minify JS
         run: |
-          find js -name "*.js" | while read file; do
-            terser "$file" -o "$file" --compress --mangle
-          done
+          if [ -d js ]; then
+            find js -name "*.js" | while read -r file; do
+              terser "$file" -o "$file" --compress --mangle
+            done
+          fi
 
       # 7. Convert & compress images (WebP & AVIF)
       - name: Optimize Images
         run: |
           mkdir -p optimized_images
-          for img in $(find images -type f -name "*.png" -o -name "*.jpg" -o -name "*.jpeg"); do
-            filename=$(basename "$img" | sed 's/\.[^.]*$//')
-            mkdir -p "optimized_images/$(dirname "$img")"
-            npx @squoosh/cli --webp --avif "$img" -d optimized_images
+          find images -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) | while read -r img; do
+            filename=$(basename "$img")
+            dir=$(dirname "$img")
+            mkdir -p "optimized_images/$dir"
+            npx @squoosh/cli --webp '{}' --avif '{}' "$img" -d "optimized_images/$dir"
           done
           rsync -a optimized_images/ images/
 
       # 8. Add lazy loading to <img> tags
       - name: Add Lazy Loading
         run: |
-          find . -name "*.html" -o -name "*.php" | while read file; do
+          find . \( -name "*.html" -o -name "*.php" \) | while read -r file; do
             node -e "
               const fs = require('fs');
               const cheerio = require('cheerio');
@@ -81,40 +88,36 @@ jobs:
       # 9. Generate responsive `srcset` for images
       - name: Generate Responsive Images
         run: |
-          for img in $(find images -type f -name "*.jpg" -o -name "*.png" -o -name "*.jpeg"); do
-            filename=$(basename "$img")
+          find images -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" \) | while read -r img; do
             dir=$(dirname "$img")
             for size in 320 640 1024; do
-              npx @squoosh/cli --resize "{width:$size}" "$img" -d "$dir/${size}w"
+              mkdir -p "$dir/${size}w"
+              npx @squoosh/cli --resize "{\"width\":$size}" "$img" -d "$dir/${size}w"
             done
           done
 
-      # 10. Install Lighthouse CI
-      - name: Install Lighthouse CI
-        run: npm install -g @lhci/cli
-
-      # 11. Run Lighthouse on all pages
+      # 10. Run Lighthouse on all pages
       - name: Lighthouse CI
         run: |
           lhci autorun --collect.url="http://localhost/index.php" \
                        --collect.url="http://localhost/about.php" \
                        --collect.url="http://localhost/contact.php"
 
-      # 12. Fail if performance < 90
+      # 11. Fail if performance < 90
       - name: Check Lighthouse Performance
         run: |
-          SCORE=$(cat .lighthouseci/manifest.json | grep -m1 '"performance"' | grep -o '[0-9]*')
+          SCORE=$(grep -m1 '"performance"' .lighthouseci/manifest.json | grep -o '[0-9]*')
           if [ "$SCORE" -lt 90 ]; then
             echo "Performance score $SCORE < 90. Failing."
             exit 1
           fi
 
-      # 13. Push to optimized branch
+      # 12. Push to optimized branch
       - name: Push to optimized branch
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git checkout -B optimized
           git add .
-          git commit -m "Optimized site"
+          git commit -m "Optimized site" || echo "No changes to commit"
           git push origin optimized --force
