@@ -30,15 +30,32 @@ jobs:
           php -S localhost:8080 -t . > /dev/null 2>&1 &
           sleep 5
 
-      - name: Run Lighthouse CI
+      - name: Detect HTML/PHP pages
+        id: detect_pages
         run: |
-          lhci collect --url=http://localhost:8080/index.php
-          lhci collect --url=http://localhost:8080/about.php
-          lhci collect --url=http://localhost:8080/contact.php
-          lhci assert --assertions.performance=90
+          urls=()
+          while IFS= read -r file; do
+            relative="${file#./}"
+            urls+=("http://localhost:8080/$relative")
+          done < <(find . -type f \( -iname "*.php" -o -iname "*.html" \))
+          echo "urls=${urls[*]}" >> $GITHUB_OUTPUT
+
+      - name: Run Lighthouse CI on all pages
+        run: |
+          IFS=' ' read -r -a pages <<< "${{ steps.detect_pages.outputs.urls }}"
+          for page in "${pages[@]}"; do
+            echo "Auditing $page"
+            lighthouse "$page" --output=json --output-path=lhreport.json --only-categories=performance,accessibility,best-practices,seo
+            score=$(jq '.categories.performance.score' lhreport.json)
+            score=$(echo "$score * 100" | bc)
+            if (( $(echo "$score < 90" | bc -l) )); then
+              echo "Performance score for $page is below 90 ($score). Failing."
+              exit 1
+            fi
+          done
 
       - name: Upload Lighthouse Reports
         uses: actions/upload-artifact@v4
         with:
           name: lighthouse-reports
-          path: .lighthouseci
+          path: lhreport.json
