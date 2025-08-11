@@ -17,10 +17,13 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install dependencies locally
+      - name: Setup Yarn
+        run: npm install -g yarn
+
+      - name: Install dependencies with Yarn
         run: |
-          npm install html-minifier-terser clean-css-cli terser purgecss cheerio uglify-js lighthouse jq bc --legacy-peer-deps
-          npm install @squoosh/cli@0.6.2 --legacy-peer-deps
+          yarn add html-minifier-terser clean-css-cli terser purgecss cheerio uglify-js lighthouse jq bc
+          yarn add @squoosh/cli@0.6.2
 
       - name: Copy site to optimized directory
         run: |
@@ -72,6 +75,10 @@ jobs:
               fs.writeFileSync('$file', \$.html());
             "
           done
+
+      - name: Prune unused images
+        run: |
+          node js/prune-unused-images.js --root optimized
 
       - name: Start local PHP server
         run: |
@@ -133,3 +140,4 @@ jobs:
           path: |
             optimized/
             lh_reports/
+            prune-report.json

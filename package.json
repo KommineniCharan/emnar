@@ -5,7 +5,8 @@
   "scripts": {
     "optimize": "node js/optimize.js",
     "serve:optimized": "npx serve optimized -l 8080",
-    "lhci": "npx lhci autorun"
+    "lhci": "npx lhci autorun",
+    "prune-images": "node js/prune-unused-images.js --root optimized"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^4.0.3",
