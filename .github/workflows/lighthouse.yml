@@ -19,8 +19,8 @@ jobs:
 
       - name: Install dependencies locally
         run: |
-          npm install html-minifier-terser clean-css-cli terser purgecss cheerio uglify-js lighthouse jq bc
-          npm install @squoosh/cli@0.6.2
+          npm install html-minifier-terser clean-css-cli terser purgecss cheerio uglify-js lighthouse jq bc --legacy-peer-deps
+          npm install @squoosh/cli@0.6.2 --legacy-peer-deps
 
       - name: Copy site to optimized directory
         run: |
