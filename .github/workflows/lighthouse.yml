@@ -17,12 +17,12 @@ jobs:
         with:
           node-version: 20
 
-      # 1️⃣ Install all required optimization tools
+      # 1️⃣ Install all required CLI optimization tools
       - name: Install dependencies
         run: |
-          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio cssnano uglify-js lighthouse
+          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio uglify-js lighthouse
 
-      # 2️⃣ Copy site to 'optimized' directory for safe processing
+      # 2️⃣ Copy site to 'optimized' directory for safe processing (exclude optimized dir itself)
       - name: Copy site to optimized directory
         run: |
           mkdir -p optimized
@@ -41,7 +41,7 @@ jobs:
         run: |
           purgecss --css optimized/css/*.css --content optimized/**/*.php optimized/**/*.html --output optimized/css
           for css in optimized/css/*.css; do
-            cssnano "$css" "$css"
+            cleancss -o "$css" "$css"
           done
 
       # 5️⃣ Minify JS
