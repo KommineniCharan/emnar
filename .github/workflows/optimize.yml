@@ -29,6 +29,7 @@ jobs:
       # 4. Optimize HTML files
       - name: Minify HTML
         run: |
+          shopt -s nullglob
           find . \( -name "*.html" -o -name "*.php" \) | while read -r file; do
             html-minifier-terser --collapse-whitespace --remove-comments \
               --minify-js true --minify-css true \
@@ -40,6 +41,7 @@ jobs:
       # 5. Optimize CSS (remove unused Bootstrap + custom CSS)
       - name: Purge & Minify CSS
         run: |
+          shopt -s nullglob
           if [ -d css ]; then
             find css -name "*.css" | while read -r file; do
               purgecss --css "$file" --content "**/*.php" "**/*.html" "**/*.js" \
@@ -51,6 +53,7 @@ jobs:
       # 6. Minify JS
       - name: Minify JS
         run: |
+          shopt -s nullglob
           if [ -d js ]; then
             find js -name "*.js" | while read -r file; do
               terser "$file" -o "$file" --compress --mangle
@@ -62,19 +65,13 @@ jobs:
         run: |
           mkdir -p optimized_images
           find images -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | while read -r img; do
-            # Get relative path without leading "images/"
             rel_path="${img#images/}"
-            # Get directory path of relative file
             rel_dir=$(dirname "$rel_path")
-
-            # Make sure output directory exists inside optimized_images
             mkdir -p "optimized_images/$rel_dir"
-
-            # Optimize image to WebP and AVIF, output to corresponding folder
-            npx @squoosh/cli --webp --avif "$img" -d "optimized_images/$rel_dir"
+            npx @squoosh/cli --webp '{"quality":80}' --avif '{"quality":60}' "$img" -d "optimized_images/$rel_dir"
           done
 
-          # Optionally overwrite original images with optimized ones
+          # Overwrite originals with optimized images
           rsync -a optimized_images/ images/
 
       # 8. Add lazy loading to <img> tags
@@ -93,7 +90,7 @@ jobs:
             "
           done
 
-            # 9. Generate Responsive Images
+      # 9. Generate Responsive Images
       - name: Generate Responsive Images
         run: |
           find images -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) | while read -r img; do
@@ -104,7 +101,6 @@ jobs:
               npx @squoosh/cli --resize "{\"width\":$size}" "$img" -d "images/$rel_dir/${size}w"
             done
           done
-
 
       # 10. Run Lighthouse on all pages
       - name: Lighthouse CI
