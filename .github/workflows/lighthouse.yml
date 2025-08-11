@@ -1,9 +1,8 @@
-name: Lighthouse CI with Image Optimization
+name: Performance & SEO Optimization
 
 on:
   push:
-    branches:
-      - optimized
+    branches: [ optimized ]
   workflow_dispatch:
 
 jobs:
@@ -18,45 +17,46 @@ jobs:
         with:
           node-version: 20
 
-      # 1️⃣ Install Image Optimization Tool
+      # 1️⃣ Image Optimization (including WebP/AVIF)
       - name: Install imagemin CLI and plugins
         run: |
-          npm install -g imagemin-cli imagemin-mozjpeg imagemin-pngquant imagemin-webp
+          npm install -g imagemin-cli imagemin-mozjpeg imagemin-pngquant imagemin-webp imagemin-avif
 
-      # 2️⃣ Optimize Images
-      - name: Optimize images in repo
+      - name: Optimize images and convert to WebP/AVIF
         run: |
           imagemin "**/*.{jpg,jpeg,png}" --plugin=mozjpeg --plugin=pngquant --out-dir=.
+          imagemin "**/*.{jpg,jpeg,png}" --plugin=webp --out-dir=.
+          imagemin "**/*.{jpg,jpeg,png}" --plugin=avif --out-dir=.
 
-      # 3️⃣ Commit Optimized Images Back to Branch
-      - name: Commit optimized images
+      # 2️⃣ CSS Minification & Purging
+      - name: Minify and Purge CSS
+        run: |
+          npm install -g clean-css-cli purgecss
+          cleancss -o css/style.min.css css/style.css
+          purgecss --css css/style.min.css --content "**/*.php" --output css/
+
+      # 3️⃣ JS Minification
+      - name: Minify JS
+        run: |
+          npm install -g terser
+          terser js/scripts.js -o js/scripts.min.js
+
+      # 4️⃣ Commit Optimized Assets Back to Branch (skip if bot)
+      - name: Commit optimized assets
+        if: github.actor != 'github-actions[bot]'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Optimize images" || echo "No image changes to commit"
+          git commit -m "Optimize images, minify CSS/JS" || echo "No changes to commit"
           git push origin optimized
 
-      # 4️⃣ Install Lighthouse CI
-      - name: Install Lighthouse CI
-        run: npm install -g @lhci/cli
-
-      # 5️⃣ Build Site (modify if needed)
-      - name: Build site
-        run: |
-          echo "No build step required."
-
-      # 6️⃣ Run Lighthouse CI & Save Reports
-      - name: Run Lighthouse CI
-        run: |
-          mkdir -p ./lhci-reports
-          lhci collect --url="https://<your-github-username>.github.io/<repo-name>/" --output-path=./lhci-reports/report.json --output=./lhci-reports/report.html || echo "Lighthouse failed"
-          cp ./lhci-reports/report.json ./lhci-reports/report-$(date +%Y%m%d%H%M).json
-          cp ./lhci-reports/report.html ./lhci-reports/report-$(date +%Y%m%d%H%M).html
-
-      # 7️⃣ Upload Reports as GitHub Artifacts
-      - name: Upload Lighthouse Reports
+      # 5️⃣ Upload Optimized Assets as Artifacts
+      - name: Upload Optimized Assets
         uses: actions/upload-artifact@v4
         with:
-          name: lighthouse-reports
-          path: ./lhci-reports
+          name: optimized-assets
+          path: |
+            css/style.min.css
+            js/scripts.min.js
+            images/
