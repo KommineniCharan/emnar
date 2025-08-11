@@ -19,7 +19,8 @@ jobs:
 
       - name: Install dependencies locally
         run: |
-          npm install html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio uglify-js lighthouse jq bc
+          npm install html-minifier-terser clean-css-cli terser purgecss cheerio uglify-js lighthouse jq bc
+          npm install @squoosh/cli@0.6.2
 
       - name: Copy site to optimized directory
         run: |
@@ -49,10 +50,7 @@ jobs:
       - name: Optimize images recursively with Squoosh
         run: |
           find optimized/images -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | while read -r img; do
-            # Optimize originals to WebP & AVIF in original dir
             npx @squoosh/cli --webp '{"quality":80}' --avif '{"quality":60}' "$img" -d "$(dirname "$img")"
-
-            # Generate resized images in size folders alongside originals
             for size in 320 640 1024; do
               output_dir="$(dirname "$img")/${size}w"
               mkdir -p "$output_dir"
