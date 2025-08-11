@@ -23,7 +23,7 @@ jobs:
       - name: Install Optimization Tools
         run: |
           npm install -g html-minifier-terser clean-css-cli terser \
-          purgecss @squoosh/cli cheerio
+          purgecss @squoosh/cli@0.7.1 cheerio
 
       # 4. Optimize HTML files
       - name: Minify HTML
@@ -58,7 +58,7 @@ jobs:
           for img in $(find images -type f -name "*.png" -o -name "*.jpg" -o -name "*.jpeg"); do
             filename=$(basename "$img" | sed 's/\.[^.]*$//')
             mkdir -p "optimized_images/$(dirname "$img")"
-            npx @squoosh/cli --webp auto --avif auto "$img" -d optimized_images
+            npx @squoosh/cli --webp --avif "$img" -d optimized_images
           done
           rsync -a optimized_images/ images/
 
