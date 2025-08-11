@@ -1,4 +1,4 @@
-name: Performance & SEO Optimization
+name: Full Website Optimization & Lighthouse CI
 
 on:
   push:
@@ -17,46 +17,114 @@ jobs:
         with:
           node-version: 20
 
-      # 1️⃣ Image Optimization (including WebP/AVIF)
-      - name: Install imagemin CLI and plugins
+      # 1️⃣ Install all required optimization tools
+      - name: Install dependencies
         run: |
-          npm install -g imagemin-cli imagemin-mozjpeg imagemin-pngquant imagemin-webp imagemin-avif
+          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio cssnano uglify-js lighthouse
 
-      - name: Optimize images and convert to WebP/AVIF
+      # 2️⃣ Copy site to 'optimized' directory for safe processing
+      - name: Copy site to optimized directory
         run: |
-          imagemin "**/*.{jpg,jpeg,png}" --plugin=mozjpeg --plugin=pngquant --out-dir=.
-          imagemin "**/*.{jpg,jpeg,png}" --plugin=webp --out-dir=.
-          imagemin "**/*.{jpg,jpeg,png}" --plugin=avif --out-dir=.
+          mkdir -p optimized
+          cp -r * optimized/
 
-      # 2️⃣ CSS Minification & Purging
-      - name: Minify and Purge CSS
+      # 3️⃣ Minify HTML (PHP & HTML files)
+      - name: Minify HTML files
         run: |
-          npm install -g clean-css-cli purgecss
-          cleancss -o css/style.min.css css/style.css
-          purgecss --css css/style.min.css --content "**/*.php" --output css/
+          find optimized -name "*.php" -o -name "*.html" | while read file; do
+            html-minifier-terser --collapse-whitespace --remove-comments --minify-js true --minify-css true -o "$file" "$file"
+          done
 
-      # 3️⃣ JS Minification
-      - name: Minify JS
+      # 4️⃣ Remove unused CSS and minify CSS
+      - name: Purge and Minify CSS
         run: |
-          npm install -g terser
-          terser js/scripts.js -o js/scripts.min.js
+          purgecss --css optimized/css/*.css --content optimized/**/*.php optimized/**/*.html --output optimized/css
+          for css in optimized/css/*.css; do
+            cssnano "$css" "$css"
+          done
 
-      # 4️⃣ Commit Optimized Assets Back to Branch (skip if bot)
-      - name: Commit optimized assets
-        if: github.actor != 'github-actions[bot]'
+      # 5️⃣ Minify JS
+      - name: Minify JavaScript
+        run: |
+          for js in optimized/js/*.js; do
+            uglifyjs "$js" -o "$js" --compress --mangle
+          done
+
+      # 6️⃣ Optimize images (WebP, AVIF, compress originals, responsive sizes)
+      - name: Optimize images
+        run: |
+          for img in optimized/images/*.{png,jpg,jpeg}; do
+            [ -f "$img" ] && npx @squoosh/cli --webp '{"quality":80}' --avif '{"quality":60}' "$img"
+            [ -f "$img" ] && npx @squoosh/cli --resize '{"width":320}' "$img" -o "${img%.*}-320.${img##*.}"
+            [ -f "$img" ] && npx @squoosh/cli --resize '{"width":640}' "$img" -o "${img%.*}-640.${img##*.}"
+            [ -f "$img" ] && npx @squoosh/cli --resize '{"width":1024}' "$img" -o "${img%.*}-1024.${img##*.}"
+          done
+
+      # 7️⃣ Add lazy loading to <img> tags
+      - name: Add lazy loading to images
+        run: |
+          find optimized -name "*.php" -o -name "*.html" | while read file; do
+            node -e "
+              const fs = require('fs');
+              const cheerio = require('cheerio');
+              let html = fs.readFileSync('$file', 'utf8');
+              const $ = cheerio.load(html);
+              $('img').each((_, el) => {
+                if (!$(el).attr('loading')) $(el).attr('loading', 'lazy');
+              });
+              fs.writeFileSync('$file', $.html());
+            "
+          done
+
+      # 8️⃣ Start local PHP server for Lighthouse
+      - name: Start local server
+        run: |
+          php -S localhost:8080 -t optimized > /dev/null 2>&1 &
+          sleep 5
+
+      # 9️⃣ Auto-detect all HTML/PHP pages for Lighthouse
+      - name: Detect pages for Lighthouse
+        id: detect_pages
+        run: |
+          urls=()
+          while IFS= read -r file; do
+            relative_path="${file#optimized/}"
+            urls+=("http://localhost:8080/$relative_path")
+          done < <(find optimized -type f \( -name "*.php" -o -name "*.html" \))
+          echo "urls=${urls[*]}" >> $GITHUB_OUTPUT
+
+      # 🔟 Run Lighthouse on all detected pages
+      - name: Run Lighthouse CI
+        run: |
+          IFS=' ' read -r -a url_array <<< "${{ steps.detect_pages.outputs.urls }}"
+          for url in "${url_array[@]}"; do
+            echo "Testing $url"
+            lighthouse "$url" --output=json --output-path=./lhreport.json --only-categories=performance,accessibility,best-practices,seo
+            score=$(jq '.categories.performance.score' lhreport.json)
+            score=$(echo "$score * 100" | bc)
+            if (( $(echo "$score < 90" | bc -l) )); then
+              echo "Performance score for $url is below 90 ($score). Failing."
+              exit 1
+            fi
+          done
+
+      # 1️⃣1️⃣ Push optimized site to optimized branch
+      - name: Push to optimized branch
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan optimized
+          git rm -rf .
+          cp -r optimized/* .
           git add .
-          git commit -m "Optimize images, minify CSS/JS" || echo "No changes to commit"
-          git push origin optimized
+          git commit -m "Optimized site"
+          git push -f origin optimized
 
-      # 5️⃣ Upload Optimized Assets as Artifacts
-      - name: Upload Optimized Assets
+      # 1️⃣2️⃣ Upload optimization and Lighthouse reports as artifacts
+      - name: Upload Reports
         uses: actions/upload-artifact@v4
         with:
-          name: optimized-assets
+          name: optimization-lighthouse-reports
           path: |
-            css/style.min.css
-            js/scripts.min.js
-            images/
+            optimized/
+            lhreport.json
