@@ -15,12 +15,12 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
 
-      # 1️⃣ Install all required CLI optimization tools
+      # 1️⃣ Install all required CLI optimization tools (pin @squoosh/cli to 3.0.0)
       - name: Install dependencies
         run: |
-          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio uglify-js lighthouse
+          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli@3.0.0 cheerio uglify-js lighthouse
 
       # 2️⃣ Copy site to 'optimized' directory for safe processing (exclude optimized dir itself)
       - name: Copy site to optimized directory
