@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - optimized
   workflow_dispatch:
 
 jobs:
@@ -131,7 +132,7 @@ jobs:
               echo "Optimizing image: $img"
               # Create WebP version
               npx @squoosh/cli \
-                --webp '{"quality":85,"target_size":0,"target_PSNR":0,"method":4,"sns_strength":50,"filter_strength":60,"filter_sharpness":0,"filter_type":1,"partitions":0,"segments":4,"pass":1,"show_compressed":0,"preprocessing":0,"autofilter":0,"partition_limit":0,"alpha_compression":1,"alpha_filtering":1,"alpha_quality":100,"lossless":false,"exact":0,"image_hint":0,"emulate_jpeg_size":0,"thread_level":0,"low_memory":0,"near_lossless":100,"use_delta_palette":0,"use_sharp_yuv":0}' \
+                --webp '{"quality":85,"method":4,"sns_strength":50,"filter_strength":60,"segments":4,"pass":1,"alpha_quality":100,"use_sharp_yuv":0}' \
                 "$img" \
                 -d "$(dirname "$img")"
             done
@@ -152,7 +153,7 @@ jobs:
               for size in 320 640 1024 1920; do
                 mkdir -p "images/$rel_dir/${size}w"
                 npx @squoosh/cli \
-                  --resize "{\"width\":$size,\"height\":0,\"method\":\"lanczos3\",\"fitMethod\":\"stretch\",\"premultiply\":false,\"linearRGB\":false}" \
+                  --resize "{\"width\":$size}" \
                   "$img" \
                   -d "images/$rel_dir/${size}w" \
                   -s "${base_name}.${ext}"
@@ -175,12 +176,8 @@ jobs:
                 
                 \$('img').each((_, el) => {
                   const \$img = \$(el);
-                  if (!\$img.attr('loading')) {
-                    \$img.attr('loading', 'lazy');
-                  }
-                  if (!\$img.attr('decoding')) {
-                    \$img.attr('decoding', 'async');
-                  }
+                  if (!\$img.attr('loading')) { \$img.attr('loading', 'lazy'); }
+                  if (!\$img.attr('decoding')) { \$img.attr('decoding', 'async'); }
                 });
                 
                 fs.writeFileSync('$file', \$.html());
@@ -198,30 +195,14 @@ jobs:
             node -e "
               const fs = require('fs');
               const cheerio = require('cheerio');
-              
               try {
                 let html = fs.readFileSync('$file', 'utf8');
                 const \$ = cheerio.load(html, { decodeEntities: false });
-                
-                // Add preload for critical CSS
                 if (\$('link[rel=\"stylesheet\"]').length > 0) {
                   \$('link[rel=\"stylesheet\"]').first().before('<link rel=\"preload\" href=\"css/style.css\" as=\"style\" onload=\"this.onload=null;this.rel=\\\"stylesheet\\\"\">');
                 }
-                
-                // Add preload for critical fonts
-                if (\$('link[href*=\"fonts\"]').length > 0) {
-                  \$('link[href*=\"fonts\"]').each((_, el) => {
-                    const href = \$(el).attr('href');
-                    if (href) {
-                      \$(el).before(\`<link rel=\"preload\" href=\"\${href}\" as=\"font\" type=\"font/woff2\" crossorigin>\`);
-                    }
-                  });
-                }
-                
                 fs.writeFileSync('$file', \$.html());
-              } catch (error) {
-                console.log('Error processing $file:', error.message);
-              }
+              } catch (error) { console.log('Error processing $file:', error.message); }
             "
           done
 
@@ -232,10 +213,10 @@ jobs:
           echo "Generated on: $(date)" >> optimization-report.md
           echo "" >> optimization-report.md
           echo "## File Counts:" >> optimization-report.md
-          echo "- PHP files: $(find . -name "*.php" | wc -l)" >> optimization-report.md
-          echo "- CSS files: $(find . -name "*.css" | wc -l)" >> optimization-report.md
-          echo "- JS files: $(find . -name "*.js" | wc -l)" >> optimization-report.md
-          echo "- Images: $(find images -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) | wc -l)" >> optimization-report.md
+          echo "- PHP files: $(find . -name \"*.php\" | wc -l)" >> optimization-report.md
+          echo "- CSS files: $(find . -name \"*.css\" | wc -l)" >> optimization-report.md
+          echo "- JS files: $(find . -name \"*.js\" | wc -l)" >> optimization-report.md
+          echo "- Images: $(find images -type f \( -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.png\" -o -iname \"*.webp\" \) | wc -l)" >> optimization-report.md
           echo "" >> optimization-report.md
           echo "## Total Size:" >> optimization-report.md
           echo "- Total size: $(du -sh . | cut -f1)" >> optimization-report.md
