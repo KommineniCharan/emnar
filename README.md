@@ -42,10 +42,15 @@ This repository contains comprehensive GitHub Actions workflows for optimizing t
    npm install
    ```
 
-2. **Configure GitHub Secrets** (Optional):
+2. **Generate Lock File** (if needed):
+   ```bash
+   npm run generate-lockfile
+   ```
+
+3. **Configure GitHub Secrets** (Optional):
    - `LHCI_GITHUB_APP_TOKEN`: For Lighthouse CI GitHub integration
 
-3. **Update URLs** in `lighthouse.yml`:
+4. **Update URLs** in `lighthouse.yml`:
    - Modify the URLs array to match your actual pages
 
 ## 🔧 Usage
@@ -137,19 +142,25 @@ Add patterns to exclude specific files from optimization:
 
 ### Common Issues
 
-1. **PHP Server Not Starting**:
+1. **Dependencies Lock File Not Found**:
+   ```bash
+   Error: Dependencies lock file is not found
+   ```
+   **Solution**: Run `npm run generate-lockfile` to create package-lock.json
+
+2. **PHP Server Not Starting**:
    - Ensure PHP is installed in the GitHub Actions environment
    - Check port availability (default: 8000)
 
-2. **Image Optimization Fails**:
+3. **Image Optimization Fails**:
    - Verify image formats are supported (JPG, PNG, WebP)
    - Check file permissions
 
-3. **CSS Purge Too Aggressive**:
+4. **CSS Purge Too Aggressive**:
    - Review PurgeCSS content patterns
    - Add safelist for dynamic classes
 
-4. **Lighthouse Timeout**:
+5. **Lighthouse Timeout**:
    - Increase timeout settings in workflow
    - Reduce number of pages tested
 

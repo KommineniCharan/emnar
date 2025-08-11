@@ -13,7 +13,9 @@
     "optimize:images": "node js/optimize-images.js",
     "optimize:css": "node js/optimize-css.js",
     "optimize:js": "node js/optimize-js.js",
-    "add:lazyload": "node js/add-lazyload.js"
+    "add:lazyload": "node js/add-lazyload.js",
+    "generate-lockfile": "node generate-lockfile.js",
+    "postinstall": "npm run generate-lockfile"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^4.0.3",

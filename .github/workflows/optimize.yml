@@ -20,23 +20,45 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
 
       - name: Install dependencies
         run: |
-          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio imagemin imagemin-mozjpeg imagemin-pngquant imagemin-webp sharp
+          # Install global optimization tools
+          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio
+          
+          # Create package-lock.json if it doesn't exist
+          if [ -f package.json ] && [ ! -f package-lock.json ]; then
+            npm install --package-lock-only
+          fi
+          
+          # Install local dependencies if package.json exists
+          if [ -f package.json ]; then
+            npm ci --prefer-offline --no-audit
+          fi
+          
+          # Verify tools are installed
+          echo "Verifying installed tools..."
+          html-minifier-terser --version || echo "html-minifier-terser not found"
+          cleancss --version || echo "cleancss not found"
+          terser --version || echo "terser not found"
+          purgecss --version || echo "purgecss not found"
 
       - name: Create optimized directory
         run: mkdir -p optimized
 
       - name: Copy files to optimized directory
         run: |
-          cp -r *.php optimized/
-          cp -r css optimized/
-          cp -r js optimized/
-          cp -r images optimized/
-          cp -r fonts optimized/
-          cp -r *.html optimized/ 2>/dev/null || true
+          # Copy PHP files
+          cp -r *.php optimized/ 2>/dev/null || echo "No PHP files found"
+          
+          # Copy directories if they exist
+          [ -d css ] && cp -r css optimized/ || echo "CSS directory not found"
+          [ -d js ] && cp -r js optimized/ || echo "JS directory not found"
+          [ -d images ] && cp -r images optimized/ || echo "Images directory not found"
+          [ -d fonts ] && cp -r fonts optimized/ || echo "Fonts directory not found"
+          
+          # Copy HTML files if they exist
+          cp -r *.html optimized/ 2>/dev/null || echo "No HTML files found"
 
       - name: Minify HTML and PHP files
         run: |
