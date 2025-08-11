@@ -1,36 +1,32 @@
-name: Full Website Optimization & Lighthouse Audit
+name: Website Optimization & Lighthouse CI
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  optimize-and-audit:
+  optimize:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout your code
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Setup Node.js (use v16 for Squoosh WASM compatibility)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: '16'
 
-      - name: Cache npm modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install optimization tools
+      # 3. Install dependencies for optimization
+      - name: Install Optimization Tools
         run: |
-          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio @lhci/cli
+          npm install -g html-minifier-terser clean-css-cli terser \
+          purgecss @squoosh/cli@0.7.1 cheerio @lhci/cli
 
+      # 4. Optimize HTML files
       - name: Minify HTML
         run: |
           shopt -s nullglob
@@ -42,16 +38,19 @@ jobs:
               --file-ext html,php
           done
 
-      - name: Purge & minify CSS
+      # 5. Optimize CSS (remove unused Bootstrap + custom CSS)
+      - name: Purge & Minify CSS
         run: |
           shopt -s nullglob
           if [ -d css ]; then
             find css -name "*.css" | while read -r file; do
-              purgecss --css "$file" --content "**/*.php" "**/*.html" "**/*.js" --output css
+              purgecss --css "$file" --content "**/*.php" "**/*.html" "**/*.js" \
+                --output css
               cleancss -o "$file" "$file"
             done
           fi
 
+      # 6. Minify JS
       - name: Minify JS
         run: |
           shopt -s nullglob
@@ -61,7 +60,8 @@ jobs:
             done
           fi
 
-      - name: Optimize images (WebP & AVIF)
+      # 7. Convert & compress images (WebP & AVIF)
+      - name: Optimize Images
         run: |
           mkdir -p optimized_images
           find images -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | while read -r img; do
@@ -70,9 +70,12 @@ jobs:
             mkdir -p "optimized_images/$rel_dir"
             npx @squoosh/cli --webp '{"quality":80}' --avif '{"quality":60}' "$img" -d "optimized_images/$rel_dir"
           done
+
+          # Overwrite originals with optimized images
           rsync -a optimized_images/ images/
 
-      - name: Add lazy loading to images
+      # 8. Add lazy loading to <img> tags
+      - name: Add Lazy Loading
         run: |
           find . \( -name "*.html" -o -name "*.php" \) | while read -r file; do
             node -e "
@@ -87,7 +90,8 @@ jobs:
             "
           done
 
-      - name: Generate responsive images
+      # 9. Generate Responsive Images
+      - name: Generate Responsive Images
         run: |
           find images -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) | while read -r img; do
             rel_path="${img#images/}"
@@ -98,25 +102,24 @@ jobs:
             done
           done
 
-      - name: Start local PHP server
+      # 10. Run Lighthouse on all pages
+      - name: Lighthouse CI
         run: |
-          php -S localhost:8080 -t . > /dev/null 2>&1 &
-          sleep 5
+          lhci autorun --collect.url="http://localhost/index.php" \
+                       --collect.url="http://localhost/about.php" \
+                       --collect.url="http://localhost/contact.php"
 
-      - name: Run Lighthouse audits
+      # 11. Fail if performance < 90
+      - name: Check Lighthouse Performance
         run: |
-          urls=(
-            "http://localhost:8080/index.php"
-            "http://localhost:8080/about.php"
-            "http://localhost:8080/contact.php"
-          )
-          for url in "${urls[@]}"; do
-            echo "Running Lighthouse on $url"
-            lhci collect --url="$url" --settings.chromeFlags="--headless"
-            lhci assert --assertions.performance=90
-          done
+          SCORE=$(grep -m1 '"performance"' .lighthouseci/manifest.json | grep -o '[0-9]*')
+          if [ "$SCORE" -lt 90 ]; then
+            echo "Performance score $SCORE < 90. Failing."
+            exit 1
+          fi
 
-      - name: Push optimized site to optimized branch
+      # 12. Push to optimized branch
+      - name: Push to optimized branch
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
