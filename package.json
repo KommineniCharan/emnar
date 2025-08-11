@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "optimize": "node scripts/optimize.js",
+    "optimize": "node js/optimize.js",
     "serve:optimized": "npx serve optimized -l 8080",
     "lhci": "npx lhci autorun"
   },
