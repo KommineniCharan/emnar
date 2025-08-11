@@ -12,14 +12,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 16
 
-      - name: Install dependencies
+      - name: Install dependencies locally
         run: |
-          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio uglify-js lighthouse jq bc
+          npm install html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio uglify-js lighthouse jq bc
 
       - name: Copy site to optimized directory
         run: |
@@ -30,43 +30,40 @@ jobs:
       - name: Minify HTML files
         run: |
           find optimized \( -name "*.php" -o -name "*.html" \) | while read -r file; do
-            html-minifier-terser --collapse-whitespace --remove-comments --minify-js true --minify-css true -o "$file" "$file"
+            npx html-minifier-terser --collapse-whitespace --remove-comments --minify-js true --minify-css true -o "$file" "$file"
           done
 
       - name: Purge and Minify CSS
         run: |
-          purgecss --css optimized/css/*.css --content optimized/**/*.php optimized/**/*.html --output optimized/css
+          npx purgecss --css optimized/css/*.css --content optimized/**/*.php optimized/**/*.html --output optimized/css
           for css in optimized/css/*.css; do
-            cleancss -o "$css" "$css"
+            npx cleancss -o "$css" "$css"
           done
 
       - name: Minify JavaScript
         run: |
           for js in optimized/js/*.js; do
-            uglifyjs "$js" -o "$js" --compress --mangle
+            npx uglifyjs "$js" -o "$js" --compress --mangle
           done
 
-      - name: Optimize images
+      - name: Optimize images recursively with Squoosh
         run: |
-          shopt -s nullglob
-          for img in optimized/images/*.{png,jpg,jpeg,JPG,JPEG,PNG}; do
-            [ -f "$img" ] || continue
-
-            # Convert to WebP and AVIF in place
+          find optimized/images -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | while read -r img; do
+            # Optimize originals to WebP & AVIF in original dir
             npx @squoosh/cli --webp '{"quality":80}' --avif '{"quality":60}' "$img" -d "$(dirname "$img")"
 
-            # Generate resized images in size folders
+            # Generate resized images in size folders alongside originals
             for size in 320 640 1024; do
-              output_dir="optimized/images/${size}w"
+              output_dir="$(dirname "$img")/${size}w"
               mkdir -p "$output_dir"
               npx @squoosh/cli --resize "{\"width\":$size}" "$img" -d "$output_dir"
             done
           done
 
-      - name: Add lazy loading to images
+      - name: Add lazy loading to images in HTML/PHP files
         run: |
           find optimized \( -name "*.php" -o -name "*.html" \) | while read -r file; do
-            node -e "
+            npx node -e "
               const fs = require('fs');
               const cheerio = require('cheerio');
               let html = fs.readFileSync('$file', 'utf8');
