@@ -1,0 +1,62 @@
+name: Performance & SEO Optimization
+
+on:
+  push:
+    branches: [ optimized ]
+  workflow_dispatch:
+
+jobs:
+  optimize-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 1️⃣ Image Optimization (including WebP/AVIF)
+      - name: Install imagemin CLI and plugins
+        run: |
+          npm install -g imagemin-cli imagemin-mozjpeg imagemin-pngquant imagemin-webp imagemin-avif
+
+      - name: Optimize images and convert to WebP/AVIF
+        run: |
+          imagemin "**/*.{jpg,jpeg,png}" --plugin=mozjpeg --plugin=pngquant --out-dir=.
+          imagemin "**/*.{jpg,jpeg,png}" --plugin=webp --out-dir=.
+          imagemin "**/*.{jpg,jpeg,png}" --plugin=avif --out-dir=.
+
+      # 2️⃣ CSS Minification & Purging
+      - name: Minify and Purge CSS
+        run: |
+          npm install -g clean-css-cli purgecss
+          cleancss -o css/style.min.css css/style.css
+          purgecss --css css/style.min.css --content "**/*.php" --output css/
+
+      # 3️⃣ JS Minification
+      - name: Minify JS
+        run: |
+          npm install -g terser
+          terser js/scripts.js -o js/scripts.min.js
+
+      # 4️⃣ Commit Optimized Assets Back to Branch (skip if bot)
+      - name: Commit optimized assets
+        if: github.actor != 'github-actions[bot]'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Optimize images, minify CSS/JS" || echo "No changes to commit"
+          git push origin optimized
+
+      # 5️⃣ Upload Optimized Assets as Artifacts
+      - name: Upload Optimized Assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: optimized-assets
+          path: |
+            css/style.min.css
+            js/scripts.min.js
+            images/
