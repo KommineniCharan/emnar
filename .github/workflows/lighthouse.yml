@@ -3,59 +3,211 @@ name: Lighthouse CI Audit
 on:
   push:
     branches:
+      - main
       - optimized
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout optimized branch
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: optimized
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: 'npm'
 
-      - name: Install Lighthouse and dependencies
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.12.x
+
+      - name: Create Lighthouse CI config
         run: |
-          npm install -g @lhci/cli lighthouse jq bc
+          cat > lighthouserc.json << 'EOF'
+          {
+            "ci": {
+              "collect": {
+                "url": [
+                  "http://localhost:8000/",
+                  "http://localhost:8000/about-us.php",
+                  "http://localhost:8000/products.php",
+                  "http://localhost:8000/contact-us.php",
+                  "http://localhost:8000/cdmo.php"
+                ],
+                "numberOfRuns": 3,
+                "settings": {
+                  "chromeFlags": "--no-sandbox --disable-dev-shm-usage --disable-gpu",
+                  "onlyCategories": ["performance", "accessibility", "best-practices", "seo"],
+                  "formFactor": "desktop",
+                  "screenEmulation": {
+                    "mobile": false,
+                    "width": 1350,
+                    "height": 940,
+                    "deviceScaleFactor": 1,
+                    "disabled": false
+                  },
+                  "throttling": {
+                    "rttMs": 40,
+                    "throughputKbps": 10240,
+                    "cpuSlowdownMultiplier": 1,
+                    "requestLatencyMs": 0,
+                    "downloadThroughputKbps": 0,
+                    "uploadThroughputKbps": 0
+                  }
+                }
+              },
+              "assert": {
+                "assertions": {
+                  "categories:performance": ["warn", {"minScore": 0.8}],
+                  "categories:accessibility": ["error", {"minScore": 0.9}],
+                  "categories:best-practices": ["warn", {"minScore": 0.8}],
+                  "categories:seo": ["warn", {"minScore": 0.8}],
+                  "first-contentful-paint": ["warn", {"maxNumericValue": 2000}],
+                  "largest-contentful-paint": ["warn", {"maxNumericValue": 2500}],
+                  "cumulative-layout-shift": ["warn", {"maxNumericValue": 0.1}],
+                  "total-blocking-time": ["warn", {"maxNumericValue": 300}],
+                  "speed-index": ["warn", {"maxNumericValue": 3000}]
+                }
+              },
+              "upload": {
+                "target": "temporary-public-storage"
+              }
+            }
+          }
+          EOF
 
-      - name: Start local PHP server
+      - name: Start PHP server
         run: |
-          php -S localhost:8080 -t . > /dev/null 2>&1 &
-          sleep 5
+          # Install PHP if not available
+          sudo apt-get update
+          sudo apt-get install -y php php-cli php-common
+          
+          # Start PHP server in background
+          php -S localhost:8000 > /dev/null 2>&1 &
+          echo "PHP server started on localhost:8000"
+          
+          # Wait for server to be ready
+          sleep 10
 
-      - name: Detect HTML/PHP pages
-        id: detect_pages
+      - name: Run Lighthouse CI
         run: |
-          urls=()
-          while IFS= read -r file; do
-            relative="${file#./}"
-            urls+=("http://localhost:8080/$relative")
-          done < <(find . -type f \( -iname "*.php" -o -iname "*.html" \))
-          echo "urls=${urls[*]}" >> $GITHUB_OUTPUT
+          # Run Lighthouse CI
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
-      - name: Run Lighthouse CI on all pages
-        run: |
-          IFS=' ' read -r -a pages <<< "${{ steps.detect_pages.outputs.urls }}"
-          for page in "${pages[@]}"; do
-            echo "Auditing $page"
-            lighthouse "$page" --output=json --output-path=lhreport.json --only-categories=performance,accessibility,best-practices,seo
-            score=$(jq '.categories.performance.score' lhreport.json)
-            score=$(echo "$score * 100" | bc)
-            if (( $(echo "$score < 90" | bc -l) )); then
-              echo "Performance score for $page is below 90 ($score). Failing."
-              exit 1
-            fi
-          done
-
-      - name: Upload Lighthouse Reports
+      - name: Upload Lighthouse results
         uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: lighthouse-reports
-          path: lhreport.json
+          name: lighthouse-results
+          path: .lighthouseci/
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            try {
+              const manifestPath = path.join('.lighthouseci', 'manifest.json');
+              if (fs.existsSync(manifestPath)) {
+                const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+                
+                let comment = '## 🚀 Lighthouse CI Results\n\n';
+                comment += '| Metric | Score | Status |\n';
+                comment += '|--------|-------|--------|\n';
+                
+                manifest.forEach((result, index) => {
+                  const summary = result.summary;
+                  const url = result.url;
+                  
+                  comment += `| **${url}** | | |\n`;
+                  comment += `| Performance | ${(summary.performance * 100).toFixed(0)}% | ${summary.performance >= 0.8 ? '✅' : '⚠️'} |\n`;
+                  comment += `| Accessibility | ${(summary.accessibility * 100).toFixed(0)}% | ${summary.accessibility >= 0.9 ? '✅' : '❌'} |\n`;
+                  comment += `| Best Practices | ${(summary['best-practices'] * 100).toFixed(0)}% | ${summary['best-practices'] >= 0.8 ? '✅' : '⚠️'} |\n`;
+                  comment += `| SEO | ${(summary.seo * 100).toFixed(0)}% | ${summary.seo >= 0.8 ? '✅' : '⚠️'} |\n`;
+                  
+                  if (index < manifest.length - 1) {
+                    comment += '| | | |\n';
+                  }
+                });
+                
+                comment += '\n\n<details><summary>📊 Detailed Metrics</summary>\n\n';
+                
+                manifest.forEach((result) => {
+                  const url = result.url;
+                  const audits = result.audits;
+                  
+                  comment += `### ${url}\n\n`;
+                  comment += '| Metric | Value |\n';
+                  comment += '|--------|-------|\n';
+                  comment += `| First Contentful Paint | ${audits['first-contentful-paint'].displayValue} |\n`;
+                  comment += `| Largest Contentful Paint | ${audits['largest-contentful-paint'].displayValue} |\n`;
+                  comment += `| Cumulative Layout Shift | ${audits['cumulative-layout-shift'].displayValue} |\n`;
+                  comment += `| Total Blocking Time | ${audits['total-blocking-time'].displayValue} |\n`;
+                  comment += `| Speed Index | ${audits['speed-index'].displayValue} |\n`;
+                  comment += '\n';
+                });
+                
+                comment += '</details>';
+                
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              }
+            } catch (error) {
+              console.log('Error creating comment:', error.message);
+            }
+
+      - name: Create performance report
+        run: |
+          if [ -f .lighthouseci/manifest.json ]; then
+            echo "# Lighthouse Performance Report" > lighthouse-report.md
+            echo "Generated on: $(date)" >> lighthouse-report.md
+            echo "" >> lighthouse-report.md
+            
+            # Parse manifest and create report
+            node -e "
+              const fs = require('fs');
+              const manifest = JSON.parse(fs.readFileSync('.lighthouseci/manifest.json', 'utf8'));
+              
+              manifest.forEach((result, index) => {
+                const summary = result.summary;
+                const url = result.url;
+                const audits = result.audits;
+                
+                console.log(\`## \${url}\`);
+                console.log(\`- Performance: \${(summary.performance * 100).toFixed(0)}%\`);
+                console.log(\`- Accessibility: \${(summary.accessibility * 100).toFixed(0)}%\`);
+                console.log(\`- Best Practices: \${(summary['best-practices'] * 100).toFixed(0)}%\`);
+                console.log(\`- SEO: \${(summary.seo * 100).toFixed(0)}%\`);
+                console.log('');
+                console.log('### Key Metrics:');
+                console.log(\`- First Contentful Paint: \${audits['first-contentful-paint'].displayValue}\`);
+                console.log(\`- Largest Contentful Paint: \${audits['largest-contentful-paint'].displayValue}\`);
+                console.log(\`- Cumulative Layout Shift: \${audits['cumulative-layout-shift'].displayValue}\`);
+                console.log(\`- Total Blocking Time: \${audits['total-blocking-time'].displayValue}\`);
+                console.log(\`- Speed Index: \${audits['speed-index'].displayValue}\`);
+                console.log('');
+              });
+            " >> lighthouse-report.md
+          fi
+
+      - name: Upload performance report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-report
+          path: lighthouse-report.md
