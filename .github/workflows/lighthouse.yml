@@ -76,10 +76,6 @@ jobs:
             "
           done
 
-      - name: Prune unused images
-        run: |
-          node js/prune-unused-images.js --root optimized
-
       - name: Start local PHP server
         run: |
           php -S localhost:8080 -t optimized > /dev/null 2>&1 &
@@ -140,4 +136,3 @@ jobs:
           path: |
             optimized/
             lh_reports/
-            prune-report.json
