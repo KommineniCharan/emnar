@@ -15,28 +15,24 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 16
 
-      # 1️⃣ Install all required CLI optimization tools (install latest @squoosh/cli)
       - name: Install dependencies
         run: |
-          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio uglify-js lighthouse
+          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio uglify-js lighthouse jq bc
 
-      # 2️⃣ Copy site to 'optimized' directory for safe processing (exclude optimized dir itself)
       - name: Copy site to optimized directory
         run: |
           mkdir -p optimized
-          shopt -s extglob
+          shopt -s extglob nullglob
           cp -r !(optimized) optimized/
 
-      # 3️⃣ Minify HTML (PHP & HTML files)
       - name: Minify HTML files
         run: |
-          find optimized -name "*.php" -o -name "*.html" | while read file; do
+          find optimized \( -name "*.php" -o -name "*.html" \) | while read -r file; do
             html-minifier-terser --collapse-whitespace --remove-comments --minify-js true --minify-css true -o "$file" "$file"
           done
 
-      # 4️⃣ Remove unused CSS and minify CSS
       - name: Purge and Minify CSS
         run: |
           purgecss --css optimized/css/*.css --content optimized/**/*.php optimized/**/*.html --output optimized/css
@@ -44,46 +40,54 @@ jobs:
             cleancss -o "$css" "$css"
           done
 
-      # 5️⃣ Minify JS
       - name: Minify JavaScript
         run: |
           for js in optimized/js/*.js; do
             uglifyjs "$js" -o "$js" --compress --mangle
           done
 
-      # 6️⃣ Optimize images (WebP, AVIF, compress originals, responsive sizes)
       - name: Optimize images
         run: |
-          for img in optimized/images/*.{png,jpg,jpeg}; do
-            [ -f "$img" ] && npx @squoosh/cli --webp '{"quality":80}' --avif '{"quality":60}' "$img"
-            [ -f "$img" ] && npx @squoosh/cli --resize '{"width":320}' "$img" -o "${img%.*}-320.${img##*.}"
-            [ -f "$img" ] && npx @squoosh/cli --resize '{"width":640}' "$img" -o "${img%.*}-640.${img##*.}"
-            [ -f "$img" ] && npx @squoosh/cli --resize '{"width":1024}' "$img" -o "${img%.*}-1024.${img##*.}"
+          shopt -s nullglob
+          for img in optimized/images/*.{png,jpg,jpeg,JPG,JPEG,PNG}; do
+            [ -f "$img" ] || continue
+            base="${img%.*}"
+            ext="${img##*.}"
+            npx @squoosh/cli --webp '{"quality":80}' --avif '{"quality":60}' "$img" -d "$(dirname "$img")"
+            npx @squoosh/cli --resize '{"width":320}' "$img" -o "${base}-320.${ext}"
+            npx @squoosh/cli --resize '{"width":640}' "$img" -o "${base}-640.${ext}"
+            npx @squoosh/cli --resize '{"width":1024}' "$img" -o "${base}-1024.${ext}"
           done
 
-      # 7️⃣ Add lazy loading to <img> tags
       - name: Add lazy loading to images
         run: |
-          find optimized -name "*.php" -o -name "*.html" | while read file; do
+          find optimized \( -name "*.php" -o -name "*.html" \) | while read -r file; do
             node -e "
               const fs = require('fs');
               const cheerio = require('cheerio');
               let html = fs.readFileSync('$file', 'utf8');
-              const $ = cheerio.load(html);
-              $('img').each((_, el) => {
-                if (!$(el).attr('loading')) $(el).attr('loading', 'lazy');
+              const \$ = cheerio.load(html);
+              \$('img').each((_, el) => {
+                if (!\$(el).attr('loading')) \$(el).attr('loading', 'lazy');
               });
-              fs.writeFileSync('$file', $.html());
+              fs.writeFileSync('$file', \$.html());
             "
           done
 
-      # 8️⃣ Start local PHP server for Lighthouse
-      - name: Start local server
+      - name: Start local PHP server
         run: |
           php -S localhost:8080 -t optimized > /dev/null 2>&1 &
-          sleep 5
+          # Wait until server is up (max 30s)
+          for i in {1..30}; do
+            if curl -s http://localhost:8080 >/dev/null; then
+              echo "Server is up!"
+              break
+            else
+              echo "Waiting for server..."
+              sleep 1
+            fi
+          done
 
-      # 9️⃣ Auto-detect all HTML/PHP pages for Lighthouse
       - name: Detect pages for Lighthouse
         id: detect_pages
         run: |
@@ -92,24 +96,30 @@ jobs:
             relative_path="${file#optimized/}"
             urls+=("http://localhost:8080/$relative_path")
           done < <(find optimized -type f \( -name "*.php" -o -name "*.html" \))
-          echo "urls=${urls[*]}" >> $GITHUB_OUTPUT
+          # Output as JSON string to avoid word splitting issues
+          echo "urls=$(printf '%s\n' "${urls[@]}" | jq -R . | jq -s .)" >> $GITHUB_OUTPUT
 
-      # 🔟 Run Lighthouse on all detected pages
       - name: Run Lighthouse CI
         run: |
-          IFS=' ' read -r -a url_array <<< "${{ steps.detect_pages.outputs.urls }}"
-          for url in "${url_array[@]}"; do
+          echo "Running Lighthouse on all detected URLs..."
+          urls=${{ steps.detect_pages.outputs.urls }}
+          # Parse JSON array to bash array
+          mapfile -t url_array < <(echo "$urls" | jq -r '.[]')
+          mkdir -p lh_reports
+          for i in "${!url_array[@]}"; do
+            url="${url_array[i]}"
             echo "Testing $url"
-            lighthouse "$url" --output=json --output-path=./lhreport.json --only-categories=performance,accessibility,best-practices,seo
-            score=$(jq '.categories.performance.score' lhreport.json)
+            report_path="lh_reports/lhreport_$i.json"
+            lighthouse "$url" --output=json --output-path="$report_path" --only-categories=performance,accessibility,best-practices,seo
+            score=$(jq '.categories.performance.score' "$report_path")
             score=$(echo "$score * 100" | bc)
+            echo "Performance score for $url: $score"
             if (( $(echo "$score < 90" | bc -l) )); then
               echo "Performance score for $url is below 90 ($score). Failing."
               exit 1
             fi
           done
 
-      # 1️⃣1️⃣ Push optimized site to optimized branch
       - name: Push to optimized branch
         run: |
           git config --global user.name "github-actions[bot]"
@@ -121,11 +131,10 @@ jobs:
           git commit -m "Optimized site"
           git push -f origin optimized
 
-      # 1️⃣2️⃣ Upload optimization and Lighthouse reports as artifacts
       - name: Upload Reports
         uses: actions/upload-artifact@v4
         with:
           name: optimization-lighthouse-reports
           path: |
             optimized/
-            lhreport.json
+            lh_reports/
