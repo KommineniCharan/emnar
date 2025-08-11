@@ -1,0 +1,29 @@
+module.exports = {
+  ci: {
+    collect: {
+      startServerCommand: 'php -S localhost:8080',
+      url: [
+        "http://localhost:8080/index.php",
+        "http://localhost:8080/who-we-are.php",
+        "http://localhost:8080/cdmo.php",
+        "http://localhost:8080/our-business.php",
+        "http://localhost:8080/inorganic-apis.php",
+        "http://localhost:8080/intermediates.php",
+        "http://localhost:8080/active-pharma-ingredients.php",
+        "http://localhost:8080/careers.php",
+        "http://localhost:8080/sustainability.php",
+        "http://localhost:8080/products.php",
+        "http://localhost:8080/contact.php"
+      ],
+      numberOfRuns: 1
+    },
+    assert: {
+      assertions: {
+        'categories:performance': ['error', { minScore: 0.9 }]
+      }
+    },
+    upload: {
+      target: 'temporary-public-storage'
+    }
+  }
+};

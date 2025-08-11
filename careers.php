@@ -1,0 +1,138 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Careers | Emnar Pharma</title>
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="">
+
+<?php include 'toplinks.php' ?>
+
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<?php include 'inner-header.php' ?>
+
+<div class="pbmit-title-bar-wrapper">
+<div class="container">
+<div class="pbmit-title-bar-content">
+<div class="pbmit-title-bar-content-inner">
+<div class="pbmit-tbar">
+<div class="pbmit-tbar-inner container">
+<h1 class="pbmit-tbar-title">Careers</h1>
+</div>
+</div>
+<div class="pbmit-breadcrumb">
+<div class="pbmit-breadcrumb-inner">
+<span>
+<a title="" href="#" class="home"><span>Home</span></a>
+</span>
+<span class="sep">
+<i class="pbmit-base-icon-angle-right"></i>
+</span>
+<span><span class="post-root post post-post current-item">Careers</span></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="page-content contact-us">
+
+<section class="pbmit-team-single site-content car-sec">
+<div class="container">
+<div class="pbmit-team-single-info">
+<div class="row">
+
+<div class="col-md-12 col-xl-12">
+<div class="pbmit-entry-content">
+
+<p>At Emnar you are always learning and growing. We offer an environment that is fulfilling, both professionally and personally. You not only get an opportunity to work on diverse platforms but you are also exposed to international markets.</p>
+
+<p>At Emnar you are always learning and growing. We offer an environment that is
+fulfilling, both professionally and personally. You not only get an opportunity
+to work on diverse platforms but you are also exposed to international markets. We believe that the success of the entire Emnar Group and its staff is dependent
+on everyone in the organization acting faster, thinking smarter, trying harder
+and working more efficiently.</p>
+
+<p><b>For Job Applications:</b> <a class="custom-links" href="mailto:hr@emnar.com">hr@emnar.com</a></p>
+
+<div class="comment-respond pbmit-bg-color-white">
+<div class="pbmit-heading animation-style2">
+<h2 class="pbmit-title mb-3 text-white">Join Us</h2>
+</div>
+
+<p class="text-white">To know more about our company and to explore opportunities at Emnar Pharma please fill the form.</p>
+
+<div class="comment-form">
+
+<form action="#" method="post">
+<div class="row">
+
+<div class="col-md-6">
+<input id="name" type="text" placeholder="Your Name" class="form-control" name="name">
+</div>
+
+<div class="col-md-6">
+<input id="email" class="form-control" placeholder="Your Email" name="email" type="email">
+</div>
+
+<div class="col-md-6">
+<input id="phone" class="form-control" placeholder="Your Phone" name="phone" type="tel">
+</div>
+
+<div class="col-md-6">
+<select class="form-select">
+<option value="Interested in">Interested in</option>
+<option value="Role 1">Role 1</option>
+<option value="Role 2">Role 2</option>
+<option value="Role 3">Role 3</option>
+<option value="Role 4">Role 4</option>
+</select>
+</div>
+
+<div class="col-md-12">
+<input class="form-control" type="file" id="resumeUpload" name="resume" required>
+</div>
+
+<div class="col-md-12">
+<div class="pbmit-button-wrapper">
+<button class="pbmit-btn pbmit-btn-white">
+<span class="pbmit-button-content-wrapper">
+<span class="pbmit-button-icon">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+<path d="m31 50.979c-.362.007-.727-.081-1.049-.28-.929-.572-1.212-1.814-.653-2.742.047-.082 5.886-9.826 17.032-15.958h-43.33c-1.103 0-2-.897-2-2s.897-2 2-2h43.33c-11.084-6.097-16.989-15.884-17.047-15.982-.547-.934-.244-2.177.689-2.73.946-.561 2.192-.236 2.757.715.909 1.45 9.433 14.449 24.722 18.046.915.225 1.549 1.026 1.549 1.952s-.63 1.729-1.532 1.948c-15.354 3.61-23.849 16.626-24.767 18.099-.36.577-1.025.919-1.7.932z">
+</path>
+</svg>
+</span>
+<span class="pbmit-button-text">Apply Now</span>
+</span>
+</button>
+</div>
+</div>
+
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<?php include 'footer.php' ?>
+
+</div>
+
+<?php include 'bottomlinks.php' ?>
+
+</body>
+</html>

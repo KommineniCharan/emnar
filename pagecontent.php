@@ -1,0 +1,202 @@
+
+Our Business Page Content
+
+
+
+R And D
+
+We uniquely combine research-driven laboratories with cost-effective manufacturing facilities.
+Our company has established a new Research & Development (R&D) facility located in Sanathnagar, spanning a built-up area of approximately 7,000 square feet. This facility is fully equipped with advanced instrumentation and infrastructure to support a wide range of chemical reactions and research activities.
+
+At Emnar Pharma, development is the backbone of our operations. Our dedicated R&D division focuses on:
+Route of Synthesis (ROS) Development for APIs
+Process Optimization for scalability and cost reduction
+Polymorphism studies, chiral separation, and isomer control
+Impurity profiling and pathway prediction
+Tech Transfer readiness for seamless handover to production
+Our scientists follow QbD (Quality by Design) principles to ensure robust and reproducible processes that align with regulatory expectations.
+
+
+
+Areas of Expertise in Organic Chemistry Reactions:
+
+Grignard Reaction
+Birch Reduction
+Scholl Reaction
+Michaelis–Arbuzov Reaction
+Gould–Jacobs Reaction
+Chiral Synthesis
+Amino Acid Derivatives (Various)
+Carbohydrate Chemistry
+Hydrogenation Reactions using Pd, Pt, and Ni
+Wolff–Kishner Reduction
+Blanc Chloromethylation
+Curtius Rearrangement
+Bromination
+Chlorination
+Sulfonation
+Chlorosulfonation
+Reductive Alkylation
+Nitration
+Cyanation
+Condensation Reactions
+Substitution Reactions
+Denitro Methoxylation
+Denitro Chlorination
+
+
+
+Analyis R and D
+Analytical Research & Development (AR&D)
+The Analytical Research & Development team at Emnar plays a vital role in ensuring product quality, safety, and regulatory compliance. Our AR&D capabilities include:
+Method development & validation (as per ICH Q2 guidelines)
+Forced degradation and stability studies
+Impurity identification using LC-MS, GC-MS, UV, IR, ICP-MS
+Particle size and polymorphic studies
+In-process and finished product analysis
+Analytical methods are developed for regulatory submissions and scaled for QC implementation during routine production.
+
+Manufacturing
+Emnar’s manufacturing infrastructure is designed for scalable, compliant, and cost-effective API production. We operate two production units:
+Emnar Unit I (Hyderabad, Gaddapotharam) – Oncology | Capacity :300KL | Area: 15 acres
+Emnar Unit II – (Vishakpatnam)- General APIs | Capacity: 1460 kl | Area: 20acres
+Emnar Unit III (Hyderabad, Sangareddy)- Intermediates| Capacity:  520 KL | Area: 15 acres
+Reactor capacities upto 25KL (Glass-lined & SS)
+Solvent recovery systems and waste minimization controls
+In-house utilities: chilling, nitrogen, steam, compressed air
+Dedicated areas for hazardous reaction handling and HPAPI production
+Granulation, drying, and micronization capabilities
+
+[14:57, 18/7/2025] Sunhith Emnar Pharma: Warehouse management:
+EMNAR’s Unit IV overview:
+Production capacity: Up to 500,000 fiber drums per annum
+Drum purpose: Designed for packaging all types of APIs and intermediates—these drums are suitable across EMNAR’s operations 
+
+📦 Warehouse & Packaging Capabilities at Unit IV
+Customized fiber drums
+Multiple sizes available to accommodate different product volumes.
+Ideal for safe containment of APIs, intermediates, or by-products.
+Large-scale packaging outputs
+Half a million packaging units per year implies robust infrastructure:
+Bulk storage areas for raw fibers.
+Drum assembly and curing lines.
+Warehousing for filled drums awaiting dispatch.
+Unit IV serves as EMNAR’s dedicated packaging and warehousing hub, with significant capacity—handling up to 500,000 fiber drums annually, available in various sizes to meet the diverse storage and transport needs of APIs and intermediates.
+
+
+
+
+
+
+
+
+Sustainability Page
+
+Sustainability at Emnar Pharma
+At Emnar Pharma, sustainability is embedded in everything we do—from research and development to manufacturing and delivery. As we continue to grow, we remain committed to minimizing our environmental footprint while upholding the highest standards of health, safety, and corporate responsibility.
+
+Responsible Growth with Environmental Care
+Over the past six years, Emnar’s sales have more than doubled. However, our emissions and use of natural resources have grown at a much slower pace. This reflects our firm commitment to resource efficiency and environmental responsibility. We strive to minimize the ecological impact of our operations and products throughout their entire life cycle.
+
+Environmental Certifications and Compliance
+Our dedication to sustainability is backed by recognized global standards. Emnar Pharma is certified with:
+
+ISO 14001:2015 – Environmental Management Systems
+
+WHO-GMP – Good Manufacturing Practice with environmental safeguards
+
+Compliance with international norms for monitoring volatile organic compounds (VOCs), greenhouse gas emissions, and effluent discharge
+
+These certifications ensure we continuously monitor, control, and reduce our environmental impact in line with global best practices.
+
+Air, Water, and Waste Management
+We actively work to limit emissions into the air and water by implementing real-time monitoring systems across our facilities. All environmental metrics—including VOCs, greenhouse gases, and wastewater—are tracked and managed in accordance with international standards.
+
+Emnar follows a structured waste management strategy that focuses on:
+
+Prevention of waste generation
+
+Reduction at the source
+
+Recycling and reuse wherever possible
+
+Our goal is to reduce landfill waste and promote circular practices throughout the value chain.
+
+Health, Safety, and Workplace Responsibility
+We believe that a safe workplace is the foundation of a sustainable organization. Emnar is committed to ensuring the health and safety of all employees across our units. Our safety programs emphasize:
+
+A strong safety culture
+
+Behavior-based safety training
+
+Ongoing risk assessments and process improvements
+
+These efforts have led to consistent improvements in occupational health and safety across all our manufacturing sites.
+
+
+
+
+
+
+
+
+
+
+CDMO Page Content
+
+
+CDMO Capabilities at Emnar
+At Emnar, we provide comprehensive CDMO solutions covering the entire pharmaceutical development lifecycle — from discovery chemistry to commercial supply. Our multidisciplinary teams and world-class infrastructure support a wide range of services across various therapeutic segments, with a strong focus on APIs and intermediates.
+🔬 Research & Development
+Non-infringing route development (IP-friendly synthesis)
+Polymorph and salt screening
+Analytical method development and validation
+Process safety evaluation
+Impurity profiling and forced degradation studies
+Green chemistry and process efficiency improvement
+⚗️ Custom Synthesis & Chemical Development
+Custom synthesis of building blocks, intermediates, and NCEs
+Handling of sensitive and hazardous chemistries (e.g., nitration, cyanation)
+High-pressure and low-temperature reaction capabilities
+Asymmetric synthesis, chiral resolution, and stereoselective reactions
+Hydrogenation, bromination, halogenation, and more
+🏭 Process Scale-Up & Optimization
+Scale-up from gram to multi-metric ton levels
+DoE (Design of Experiments) and QbD-based optimization
+Tech transfer from lab → pilot plant → production
+cGMP and non-GMP scale-up in dedicated suites
+Handling of OEB 4 and OEB 5 category compounds (oncology, HPAPIs)
+🧪 Analytical Services
+Analytical method development & validation (ICH guidelines)
+Elemental impurity profiling (ICP-MS)
+Residual solvents, particle size analysis, and thermal studies
+Stability studies (ICH zones)
+Support for regulatory filings (DMF, ANDA, NDA, CEP)
+🏢 Manufacturing Facilities
+4 manufacturing units across Telangana with backward integration
+API and intermediate manufacturing in ISO 8/9 cleanrooms
+Dedicated reactors (glass-lined, SS, Hastelloy)
+Cryogenic reactors, vacuum tray dryers (VTD), RCVDs, ANFDs, FBDs
+Continuous flow and semi-continuous capabilities
+Solvent recovery and zero liquid discharge systems
+🛡️ Quality & Regulatory Compliance
+Facilities approved by USFDA, EDQM, KFDA, WHO-GMP
+ICH Q7-compliant documentation and processes
+EHS-compliant waste management and safety protocols
+Track record of successful audits by global clients and agencies
+📦 Packaging, Warehousing & Supply Chain
+cGMP-compliant warehousing with climate control
+Serialization-ready packaging
+Real-time tracking and cold chain management (as required)
+Integrated logistics and export documentation support
+🔗 Strategic Advantages
+Speed-to-market: Rapid development with parallel scale-up and documentation
+Confidentiality: Strict IP protection and client confidentiality
+Cost-efficiency: In-house KSM manufacturing to control costs and supply chain
+Collaboration: Long-term partnerships with flexibility in engagement models (FTE, fee-for-service, milestone-based)
+Let’s Develop, Scale & Deliver — Together.
+If you're looking for a reliable CDMO partner with scientific depth, global regulatory readiness, and flexible business models, Emnar is ready to support your journey.
+📞 Reach out today to discuss how we can collaborate: Contact Us
+
+
+

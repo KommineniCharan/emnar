@@ -1,0 +1,316 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Contact Us | Emnar Pharma</title>
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="">
+
+<?php include 'toplinks.php' ?>
+
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<?php include 'inner-header.php' ?>
+
+<div class="pbmit-title-bar-wrapper contact-banner">
+<div class="container">
+<div class="pbmit-title-bar-content">
+<div class="pbmit-title-bar-content-inner">
+
+<div class="pbmit-tbar">
+<div class="pbmit-tbar-inner container">
+<h1 class="pbmit-tbar-title"> Contact Us</h1>
+</div>
+</div>
+
+<div class="pbmit-breadcrumb">
+<div class="pbmit-breadcrumb-inner">
+<span>
+<a title="" href="#" class="home"><span>Home</span></a>
+</span>
+<span class="sep">
+<i class="pbmit-base-icon-angle-right"></i>
+</span>
+<span><span class="post-root post post-post current-item">Contact Us</span></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="page-content contact-us">
+
+<section class="section-lgx contact-sec-contact">
+<div class="container p-0">
+<div class="row g-0 pbminfotech-gap-40px">
+<article class="pbmit-miconheading-style-5 col-md-6 col-lg-4">
+<div class="pbmit-ihbox-style-5">
+<div class="pbmit-ihbox-headingicon">
+<div class="pbmit-ihbox-wrap">
+
+<div class="pbmit-ihbox-contents">
+<h2 class="pbmit-element-title">Email Us</h2>
+<div class="pbmit-heading-desc">
+<a href="mailto:sales@emnar.com" class="__cf_email__">sales@emnar.com</a> <br/>
+<a href="mailto:purchase@emnar.com" class="__cf_email__">purchase@emnar.com</a>
+</div>
+</div>
+
+<div class="pbmit-ihbox-icon">
+<div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+<svg id="line" height="512" viewBox="0 0 64 64" width="512" xmlns="http://www.w3.org/2000/svg">
+<path d="m58.39349 21.88092c-3.80916-2.62452-23.44149-15.58857-23.79278-15.87071a4.69523 4.69523 0 0 0 -5.20081 0l-23.03039 15.3502a4.58983 4.58983 0 0 0 -2.36951 4.00092v28.82226a4.62556 4.62556 0 0 0 4.58887 4.58887h46.82226a4.49324 4.49324 0 0 0 2.75025-.93859 4.56952 4.56952 0 0 0 1.83862-3.65028v-28.82226a4.54358 4.54358 0 0 0 -1.60651-3.48041zm-20.67443 15.28516c5.564-3.70862 16.89465-11.26068 19.84082-13.22449a2.54707 2.54707 0 0 1 .44012 1.41974v28.82226a2.56929 2.56929 0 0 1 -.47144 1.48133zm-7.2132-29.48932a2.69762 2.69762 0 0 1 2.98926.00049l22.43066 14.95019-20.36133 13.57764-2.06933 1.37256a2.69482 2.69482 0 0 1 -2.98975 0l-22.43164-14.9502zm-24.03442 47.98816a2.56943 2.56943 0 0 1 -.47144-1.48133v-28.82226a2.56671 2.56671 0 0 1 .44189-1.41833c3.17963 2.1203 16.05683 10.70752 19.8346 13.22675-3.60077 3.36254-16.64777 15.54674-19.80505 18.49517zm2.11743 1.10754a2.548 2.548 0 0 1 -.33637-.034c3.89215-3.6347 16.84479-15.73065 19.73334-18.42816 2.94675 2.23134 4.954 2.36011 8.02312-.00454l19.73848 18.4327c-.36395.10746-46.77991-.00599-47.15857.034z">
+</path>
+<path d="m36.01465 29.291a.99916.99916 0 0 0 -1.31836-.51368 6.76693 6.76693 0 0 1 -9.35247-5.26317c-.88844-8.80842 11.78869-10.53071 13.30566-1.82325.06964 1.05182.35443 2.95306-1.127 3.03509a1.17062 1.17062 0 0 1 -1.4248-1.0932v-3.73234a1.0022 1.0022 0 0 0 -1.75452-.64276 4.31981 4.31981 0 0 0 -2.34308-.7279 4.09782 4.09782 0 0 0 -.00008 8.19531 4.13925 4.13925 0 0 0 2.82452-1.126 3.18351 3.18351 0 0 0 2.69782 1.1269c2.83716.00074 3.50122-3.00616 3.10943-5.302-.87731-6.99829-9.88989-10.04651-14.79272-4.95776-5.478 5.35479-1.49664 14.93347 6.15411 14.87311 1.16553-.06976 4.63843-.25067 4.02149-2.04835zm-4.01459-4.5659a2.09788 2.09788 0 0 1 -.00006-4.19531 2.09788 2.09788 0 0 1 .00006 4.19531z">
+</path>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="pbmit-btn-wrap">
+<div class="pbmit-ihbox-btn">
+<a href="#">
+<span class="pbmit-button-text">Read More</span>
+<span class="pbmit-button-icon-wrapper">
+<span class="pbmit-button-icon">
+<i class="pbmit-base-icon-black-arrow-1"></i>
+</span>
+</span>
+</a>
+</div>
+</div>
+
+</div>
+</div>
+</article>
+
+<article class="pbmit-miconheading-style-5 col-md-6 col-lg-4">
+<div class="pbmit-ihbox-style-5">
+<div class="pbmit-ihbox-headingicon">
+<div class="pbmit-ihbox-wrap">
+<div class="pbmit-ihbox-contents">
+<h2 class="pbmit-element-title">Our Location</h2>
+<div class="pbmit-heading-desc">
+<p>Sanath Nagar, Hyderabad, Telangana – 500018.</p>
+</div>
+</div>
+<div class="pbmit-ihbox-icon">
+<div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve"
+viewBox="0 0 480.017 480.017">
+<path d="M319.161 354.513a8 8 0 0 0-1.504 15.928c100.792 9.576 138.352 32.656 138.352 44.992 0 20.288-82.168 48.584-216 48.584s-216-28.296-216-48.584c0-12.336 37.6-35.416 138.352-45.016a8 8 0 0 0-1.504-15.928c-35.856 3.416-152.848 17.832-152.848 60.944 0 42.4 116.712 64.584 232 64.584s232-22.184 232-64.584c0-43.112-116.992-57.528-152.848-60.92">
+</path>
+<path d="M338.225 40.073A134.78 134.78 0 0 0 240.177.017c-50.115.158-96.284 27.221-120.904 70.872a155.07 155.07 0 0 0-4 145.24 876.5 876.5 0 0 0 100.312 158.584l18.328 23.064a8 8 0 0 0 6.264 3.024 8 8 0 0 0 6.272-3.048l17.848-22.64a918.3 918.3 0 0 0 100.8-158.968c28.72-58.539 18.002-128.765-26.872-176.072m12.52 168.952a902.7 902.7 0 0 1-98.992 156.176l-11.592 14.704-12-15.144a861 861 0 0 1-98.552-155.712 139.09 139.09 0 0 1 3.568-130.28c21.905-38.768 62.983-62.744 107.512-62.752a118.4 118.4 0 0 1 85.944 35.088c40.259 42.424 49.877 105.416 24.112 157.92">
+</path>
+<path d="M300.529 118.241a8 8 0 0 0-10.384-4.48 8 8 0 0 0-4.476 10.391l.004.009a51.24 51.24 0 0 1 2.4 30.032 49.2 49.2 0 0 1-36.528 36.952 48.64 48.64 0 0 1-45.768-12.992 50.55 50.55 0 0 1-13.424-46.96c5.831-26.313 31.889-42.918 58.202-37.087a49 49 0 0 1 8.742 2.823 8.002 8.002 0 1 0 6.28-14.72 65.3 65.3 0 0 0-40.184-3.568 64.58 64.58 0 0 0-48.664 49.136 66.4 66.4 0 0 0 17.76 61.712 64.8 64.8 0 0 0 45.872 18.896 66.6 66.6 0 0 0 14.68-1.6 64.6 64.6 0 0 0 48.624-49.168 67 67 0 0 0-3.136-39.376">
+</path>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="pbmit-btn-wrap">
+<div class="pbmit-ihbox-btn">
+<a href="#">
+<span class="pbmit-button-text">Read More</span>
+<span class="pbmit-button-icon-wrapper">
+<span class="pbmit-button-icon">
+<i class="pbmit-base-icon-black-arrow-1"></i>
+</span>
+</span>
+</a>
+</div>
+</div>
+
+</div>
+</div>
+</article>
+
+<article class="pbmit-miconheading-style-5 col-md-6 col-lg-4">
+<div class="pbmit-ihbox-style-5">
+<div class="pbmit-ihbox-headingicon">
+<div class="pbmit-ihbox-wrap">
+
+<div class="pbmit-ihbox-contents">
+<h2 class="pbmit-element-title">Call US</h2>
+<div class="pbmit-heading-desc">
+<p>Phone: +91 – 7337229999 <br> Mobile: +91 – 7680064455</p>
+</div>
+</div>
+
+<div class="pbmit-ihbox-icon">
+<div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512.076 512.076"
+style="enable-background:new 0 0 512.076 512.076;" xml:space="preserve">
+<g transform="translate(-1 -1)"><g><g>
+<path d="M499.639,396.039l-103.646-69.12c-13.153-8.701-30.784-5.838-40.508,6.579l-30.191,38.818	c-3.88,5.116-10.933,6.6-16.546,3.482l-5.743-3.166c-19.038-10.377-42.726-23.296-90.453-71.04s-60.672-71.45-71.049-90.453				l-3.149-5.743c-3.161-5.612-1.705-12.695,3.413-16.606l38.792-30.182c12.412-9.725,15.279-27.351,6.588-40.508l-69.12-103.646				C109.12,1.056,91.25-2.966,77.461,5.323L34.12,31.358C20.502,39.364,10.511,52.33,6.242,67.539				c-15.607,56.866-3.866,155.008,140.706,299.597c115.004,114.995,200.619,145.92,259.465,145.92				c13.543,0.058,27.033-1.704,40.107-5.239c15.212-4.264,28.18-14.256,36.181-27.878l26.061-43.315				C517.063,422.832,513.043,404.951,499.639,396.039z M494.058,427.868l-26.001,43.341c-5.745,9.832-15.072,17.061-26.027,20.173				c-52.497,14.413-144.213,2.475-283.008-136.32S8.29,124.559,22.703,72.054c3.116-10.968,10.354-20.307,20.198-26.061				l43.341-26.001c5.983-3.6,13.739-1.855,17.604,3.959l37.547,56.371l31.514,47.266c3.774,5.707,2.534,13.356-2.85,17.579				l-38.801,30.182c-11.808,9.029-15.18,25.366-7.91,38.332l3.081,5.598c10.906,20.002,24.465,44.885,73.967,94.379				c49.502,49.493,74.377,63.053,94.37,73.958l5.606,3.089c12.965,7.269,29.303,3.898,38.332-7.91l30.182-38.801				c4.224-5.381,11.87-6.62,17.579-2.85l103.637,69.12C495.918,414.126,497.663,421.886,494.058,427.868z">
+</path>
+<path
+d="M291.161,86.39c80.081,0.089,144.977,64.986,145.067,145.067c0,4.713,3.82,8.533,8.533,8.533s8.533-3.82,8.533-8.533				c-0.099-89.503-72.63-162.035-162.133-162.133c-4.713,0-8.533,3.82-8.533,8.533S286.448,86.39,291.161,86.39z">
+</path>
+<path
+d="M291.161,137.59c51.816,0.061,93.806,42.051,93.867,93.867c0,4.713,3.821,8.533,8.533,8.533				c4.713,0,8.533-3.82,8.533-8.533c-0.071-61.238-49.696-110.863-110.933-110.933c-4.713,0-8.533,3.82-8.533,8.533				S286.448,137.59,291.161,137.59z">
+</path>
+<path
+d="M291.161,188.79c23.552,0.028,42.638,19.114,42.667,42.667c0,4.713,3.821,8.533,8.533,8.533s8.533-3.82,8.533-8.533				c-0.038-32.974-26.759-59.696-59.733-59.733c-4.713,0-8.533,3.82-8.533,8.533S286.448,188.79,291.161,188.79z">
+</path>
+</g>
+</g>
+</g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+<g></g>
+</svg>
+</div>
+</div>
+</div>
+<div class="pbmit-btn-wrap">
+<div class="pbmit-ihbox-btn">
+<a href="#">
+<span class="pbmit-button-text">Read More</span>
+<span class="pbmit-button-icon-wrapper">
+<span class="pbmit-button-icon">
+<i class="pbmit-base-icon-black-arrow-1"></i>
+</span>
+</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</article>
+
+</div>
+</div>
+</section>
+
+
+<section class="section-lgb contact-enq-sec">
+<div class="container">
+<div class="row g-0">
+
+<div class="col-md-12">
+<div class="contact-form-rightbox pbmit-bg-color-white">
+
+<div class="pbmit-heading animation-style2">
+<h2 class="pbmit-title pbmit-title-custom">Enquire Now</h2>
+</div>
+
+<form class="contact-form" method="post" id="contact-form" action="#">
+<div class="row">
+
+<div class="col-md-6">
+<input type="text" class="form-control" placeholder="Name" name="name"
+required>
+</div>
+
+<div class="col-md-6">
+<input type="email" class="form-control" placeholder="Your Email"
+name="email" required>
+</div>
+
+<div class="col-md-6">
+<input type="tel" class="form-control" placeholder="Phone" name="phone"
+required>
+</div>
+
+<div class="col-md-6">
+<select class="form-select">
+<option value="Type of Clean">Our Products</option>
+<option value="API">APIs</option>
+<option value="Intermediates">Intermediates</option>
+<option value="Inorganic API">Inorganic APIs</option>
+</select>
+</div>
+
+<div class="col-md-12">
+<textarea name="message" cols="40" rows="10" class="form-control"
+placeholder="Message" required></textarea>
+</div>
+
+</div>
+
+<div class="pbmit-button-wrapper">
+<button class="pbmit-btn pbmit-btn-white">
+<span class="pbmit-button-content-wrapper">
+<span class="pbmit-button-icon">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+<path
+d="m31 50.979c-.362.007-.727-.081-1.049-.28-.929-.572-1.212-1.814-.653-2.742.047-.082 5.886-9.826 17.032-15.958h-43.33c-1.103 0-2-.897-2-2s.897-2 2-2h43.33c-11.084-6.097-16.989-15.884-17.047-15.982-.547-.934-.244-2.177.689-2.73.946-.561 2.192-.236 2.757.715.909 1.45 9.433 14.449 24.722 18.046.915.225 1.549 1.026 1.549 1.952s-.63 1.729-1.532 1.948c-15.354 3.61-23.849 16.626-24.767 18.099-.36.577-1.025.919-1.7.932z">
+</path>
+</svg>
+</span>
+<span class="pbmit-button-text">Submit</span>
+</span>
+<span class="form-btn-loader d-none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
+<circle fill="#0036FF" stroke="#0036FF" stroke-width="15" r="15"
+cx="40" cy="50">
+<animate attributeName="opacity" calcMode="spline" dur="2"
+values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1"
+repeatCount="indefinite" begin="-.4"></animate>
+</circle>
+<circle fill="#0036FF" stroke="#0036FF" stroke-width="15" r="15"
+cx="100" cy="50">
+<animate attributeName="opacity" calcMode="spline" dur="2"
+values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1"
+repeatCount="indefinite" begin="-.2"></animate>
+</circle>
+<circle fill="#0036FF" stroke="#0036FF" stroke-width="15" r="15"
+cx="160" cy="50">
+<animate attributeName="opacity" calcMode="spline" dur="2"
+values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1"
+repeatCount="indefinite" begin="0"></animate>
+</circle>
+</svg>
+</span>
+</button>
+</div>
+
+</form>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+<section class="contact-iframe-section contact-iframe-sec">
+<div class="container">
+<div class="row">
+<div class="col-md-12">
+<iframe src="https://www.google.com/maps/embed?pb=!1m12!1m8!1m3!1d487130.63257274445!2d78.4000855!3d17.4736814!3m2!1i1024!2i768!4f13.1!2m1!1semnar%20pharma%20private%20limited!5e0!3m2!1sen!2sin!4v1752557781111!5m2!1sen!2sin" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<?php include 'footer.php' ?>
+
+</div>
+
+<?php include 'bottomlinks.php' ?>
+
+</body>
+</html>

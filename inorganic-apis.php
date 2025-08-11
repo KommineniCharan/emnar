@@ -1,0 +1,273 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Inorganic APIs | Emnar Pharma</title>
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="">
+
+<?php include 'toplinks.php' ?>
+
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<?php include 'inner-header.php' ?>
+
+<div class="pbmit-title-bar-wrapper products-banner">
+<div class="container">
+<div class="pbmit-title-bar-content">
+<div class="pbmit-title-bar-content-inner">
+<div class="pbmit-tbar">
+<div class="pbmit-tbar-inner container">
+<h1 class="pbmit-tbar-title">Inorganic APIs</h1>
+</div>
+</div>
+
+<div class="pbmit-breadcrumb">
+<div class="pbmit-breadcrumb-inner">
+
+<span>
+<a href="index.php" class="home"><span>Home</span></a>
+</span>
+
+<span class="sep">
+<i class="pbmit-base-icon-angle-right"></i>
+</span>
+
+<a href="products.php" class="home">
+<span><span class="post-root post post-post current-item">Products</span></span>
+</a>
+
+<span class="sep">
+<i class="pbmit-base-icon-angle-right"></i>
+</span>
+
+<a href="javascript:void(0);" class="home">
+<span><span class="post-root post post-post current-item">Inorganic API'S</span></span>
+</a>
+
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="page-content">
+
+<section class="inter-table-sec">
+<div class="container">
+
+<h2 class="text-center fw-bold mb-2 prod">Inorganic API'S</h2>
+<p class="text-center">Below you can find the full A–Z list of our products available worldwide.</p>
+
+<div class="search-box text-center">
+<input type="text" class="form-control search-input" id="productSearch"
+placeholder="Search for products..." />
+</div>
+
+<div class="table-responsive">
+<table class="table table-bordered products-table">
+
+<thead>
+<tr class="th-heading">
+<th>S.No.</th>
+<th>Product Name</th>
+<th>Therapeutic Category</th>
+<th>CAS No.</th>
+<th>IH-DMF</th>
+<th>USDMF</th>
+<th>CEP</th>
+<th>Details</th>
+</tr>
+</thead>
+
+<tbody id="product-table">
+<tr>
+<td>1</td>
+<td>Calcium Carbonate</td>
+<td></td>
+<td></td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>Copper Sulphate Pentahydrate</td>
+<td>Antidote</td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>Lithium Carbonate</td>
+<td>Bipoler disorder</td>
+<td></td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>Magnesium Sulphate Dried</td>
+<td>Constipation</td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>Magnesium Sulphate Heptahydrate</td>
+<td></td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>Potassium bicarbonate</td>
+<td>Antacid</td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>7</td>
+<td>Potassium Chloride</td>
+<td>Hypokalemia</td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>8</td>
+<td>Potassium Sulphate</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>9</td>
+<td>Sodium Acetate</td>
+<td>Sodium Level Harmonizer</td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>10</td>
+<td>Sodium Sulphate</td>
+<td>Electrolytes Harmonizer</td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>11</td>
+<td>Sodium Valporate</td>
+<td>Epilepsy and bipolar disorder</td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr>
+<td>12</td>
+<td>Zinc Pyrithione</td>
+<td>Seborrheic Dermatitis</td>
+<td></td>
+<td><i class="pbmit-base-icon-check-solid"></i></td>
+<td></td>
+<td></td>
+<td><a href="#" class="knm">Know More</a></td>
+</tr>
+
+<tr id="noResultsRow" style="display: none;">
+<td colspan="8" class="text-center text-danger">
+<p style="margin: 5px 0px;">No matching products found.</p>
+<span class="text-muted">Please Reach out to us at <a href="mailto:info@emnar.com">info@emnar.com</a> for more details on our product offerings.</span>
+</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<div class="disclaimer mt-4">
+<strong>Disclaimer:</strong> Products protected under valid patents are not offered or supplied for commercial use. However, the research quantities of such products may be offered for the purpose of R&D development or regulatory submissions, wherever such regulatory exemptions exist.
+</div>
+
+</div>
+</section>
+</div>
+
+<?php include 'footer.php' ?>
+
+</div>
+
+<?php include 'bottomlinks.php' ?>
+
+
+<script>
+document.getElementById("productSearch").addEventListener("keyup", function () {
+const searchValue = this.value.toLowerCase();
+const rows = document.querySelectorAll("#product-table tr:not(#noResultsRow)");
+let visibleCount = 0;
+
+rows.forEach(row => {
+const rowText = row.textContent.toLowerCase();
+if (rowText.includes(searchValue)) {
+row.style.display = "";
+visibleCount++;
+} else {
+row.style.display = "none";
+}
+});
+
+// Show or hide "No results found" row
+const noResultsRow = document.getElementById("noResultsRow");
+noResultsRow.style.display = visibleCount === 0 ? "" : "none";
+});
+</script>
+
+
+</body>
+</html>

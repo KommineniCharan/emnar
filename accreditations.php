@@ -1,0 +1,286 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Accreditations</title>
+
+<?php include 'toplinks.php' ?>
+
+<style>
+.box{display:flex;align-items:center;justify-content:center;background-color:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgb(0 0 0 / .06);color:#001f5b;font-weight:700;text-align:center;width:100%;min-height:100px;transition:transform 0.2s ease;text-decoration:none;text-wrap:balance;}
+.box:hover {transform: translateY(-4px);box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);}
+.row-custom > div {display: flex;}
+.box {flex-grow: 1;}
+</style>
+
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<?php include 'inner-header.php' ?>
+
+<div class="pbmit-title-bar-wrapper accreditation-banner">
+<div class="container">
+<div class="pbmit-title-bar-content">
+<div class="pbmit-title-bar-content-inner">
+<div class="pbmit-tbar">
+<div class="pbmit-tbar-inner container">
+<h1 class="pbmit-tbar-title"> Accreditations</h1>
+</div>
+</div>
+<div class="pbmit-breadcrumb">
+<div class="pbmit-breadcrumb-inner">
+<span>
+<a href="#" class="home"><span>Home</span></a>
+</span>
+<span class="sep">
+<i class="pbmit-base-icon-angle-right"></i>
+</span>
+<span><span class="post-root post post-post current-item"> Accreditations</span></span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="page-content mb-5">
+
+<section class="regu-sec">
+<div class="container">
+
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<div class="pbmit-heading animation-style2 accre-he">
+<h3 class="pbmit-title mb-4">Regulatory Approvals & Certifications</h3>
+<p>At Emnar Pharma, quality and compliance are at the core of our manufacturing philosophy. Our world-class API and intermediate production facilities are certified by top international and national regulatory bodies, ensuring global trust in every batch we produce.</p>
+</div>
+</div>
+</div>
+
+<div class="row">
+
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+<div class="regu-block">
+<article class="pbmit-miconheading-style-7 swiper-slide">
+<div class="pbmit-ihbox-style-7">
+<div class="pbmit-ihbox-box">
+<div class="pbmit-icon-wrapper d-flex align-items-center">
+<div class="pbmit-ihbox-icon">
+<div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+<!-- <img src="images/icons/quality.webp" alt="quality" class="img-fluid block-icon"> -->
+<img src="images/usfda-logo.svg" alt="quality" class="img-fluid block-icon">
+</div>
+</div>
+<h2 class="pbmit-element-title">USFDA</h2>
+</div>
+<div class="pbmit-content-wrapper">
+<div class="pbmit-heading-desc">
+<p>Our facilities have been successfully inspected by the U.S. Food & Drug Administration (USFDA) and classified as Voluntary Action Indicated (VAI). This rating reflects our adherence to stringent cGMP (current Good Manufacturing Practice) norms with only minor observations, enabling us to export to the regulated U.S. market.</p>
+<a href="certificates.php" class="vc">View Certificate</a>
+</div>
+</div>
+</div>
+
+<div class="pbmit-ihbox-btn">
+<a href="#">
+<span class="pbmit-button-text">Read More</span>
+<span class="pbmit-button-icon-wrapper">
+<span class="pbmit-button-icon">
+<i class="pbmit-base-icon-black-arrow-1"></i>
+</span>
+</span>
+</a>
+</div>
+
+</div>
+</article>
+</div>
+</div>
+
+
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+<div class="regu-block">
+<article class="pbmit-miconheading-style-7 swiper-slide">
+<div class="pbmit-ihbox-style-7">
+<div class="pbmit-ihbox-box">
+<div class="pbmit-icon-wrapper d-flex align-items-center">
+<div class="pbmit-ihbox-icon">
+<div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+<!-- <img src="images/icons/quality-control.webp" alt="quality" class="img-fluid block-icon"> -->
+<img src="images/eugmp.svg" alt="quality" class="img-fluid block-icon">
+</div>
+</div>
+<!-- <h2 class="pbmit-element-title">EUGMP</h2> -->
+<h2 class="pbmit-element-title">EDQM</h2>
+</div>
+<div class="pbmit-content-wrapper">
+<div class="pbmit-heading-desc">
+<p>We are certified by the EDQM, allowing us to supply high-quality APIs to the
+European Union. This approval confirms our compliance with EU GMP standards and
+quality assurance systems.</p>
+<a href="certificates.php" class="vc">View Certificate</a>
+</div>
+</div>
+</div>
+
+<div class="pbmit-ihbox-btn">
+<a href="#">
+<span class="pbmit-button-text">Read More</span>
+<span class="pbmit-button-icon-wrapper">
+<span class="pbmit-button-icon">
+<i class="pbmit-base-icon-black-arrow-1"></i>
+</span>
+</span>
+</a>
+</div>
+
+</div>
+</article>
+</div>
+</div>
+
+
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+<div class="regu-block">
+<article class="pbmit-miconheading-style-7 swiper-slide">
+<div class="pbmit-ihbox-style-7">
+<div class="pbmit-ihbox-box">
+<div class="pbmit-icon-wrapper d-flex align-items-center">
+<div class="pbmit-ihbox-icon">
+<div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+<!-- <img src="images/icons/export.webp" alt="quality" class="img-fluid block-icon"> -->
+<img src="images/kfda-logo.svg" alt="quality" class="img-fluid block-icon">
+</div>
+</div>
+<h2 class="pbmit-element-title">KFDA</h2>
+</div>
+<div class="pbmit-content-wrapper">
+<div class="pbmit-heading-desc">
+<p>Emnar Pharma holds KFDA approval, permitting exports to South Korea. Our facilities meet all regulatory and GMP requirements established by the Korean authorities.</p>
+<a href="certificates.php" class="vc">View Certificate</a>
+</div>
+</div>
+</div>
+
+<div class="pbmit-ihbox-btn">
+<a href="#">
+<span class="pbmit-button-text">Read More</span>
+<span class="pbmit-button-icon-wrapper">
+<span class="pbmit-button-icon">
+<i class="pbmit-base-icon-black-arrow-1"></i>
+</span>
+</span>
+</a>
+</div>
+
+</div>
+</article>
+</div>
+</div>
+
+
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+<div class="regu-block">
+<article class="pbmit-miconheading-style-7 swiper-slide">
+<div class="pbmit-ihbox-style-7">
+<div class="pbmit-ihbox-box">
+<div class="pbmit-icon-wrapper d-flex align-items-center">
+<div class="pbmit-ihbox-icon">
+<div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+<!-- <img src="images/icons/guidelines.webp" alt="quality" class="img-fluid block-icon"> -->
+<img src="images/gmp-logo.svg" alt="quality" class="img-fluid block-icon">
+</div>
+</div>
+<h2 class="pbmit-element-title">WHO-GMP</h2>
+</div>
+<div class="pbmit-content-wrapper">
+<div class="pbmit-heading-desc">
+<p>All our units follow WHO-GMP guidelines for pharmaceutical production. We implement robust quality systems and SOPs at every step, from raw material procurement to finished goods dispatch.</p>
+<a href="certificates.php" class="vc">View Certificate</a>
+</div>
+</div>
+</div>
+
+<div class="pbmit-ihbox-btn">
+<a href="#">
+<span class="pbmit-button-text">Read More</span>
+<span class="pbmit-button-icon-wrapper">
+<span class="pbmit-button-icon">
+<i class="pbmit-base-icon-black-arrow-1"></i>
+</span>
+</span>
+</a>
+</div>
+
+</div>
+</article>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+
+
+<section class="overview-about-padding accre-sec">
+<div class="container">
+
+<div class="pbmit-heading animation-style2 text-center">
+<h3 class="pbmit-title mb-4">Commitment to Global Standards</h3>
+</div>
+
+<div class="row align-items-center">
+<div class="col-md-5">
+<!-- <img src="images/accreditation-img.png" alt=""> -->
+<img src="images/accredition.svg" alt="">
+</div>
+<div class="col-md-7">
+<p>With these approvals in place, Emnar Pharma is trusted by leading pharmaceutical
+companies worldwide. We consistently deliver reliable, safe, and effective pharmaceutical ingredients that meet or exceed global expectations.</p>
+<div class="pbmit-portfolio-single mt-4">
+<h6>Our accreditations ensure</h6>
+
+<ul class="list-group">
+
+<li class="list-group-item">
+<span class="pbmit-icon-list-icon">
+<i aria-hidden="true" class="pbmit-base-icon-checked"></i>
+</span>Global market access (U.S., EU, Korea, and more)</li>
+
+<li class="list-group-item">
+<span class="pbmit-icon-list-icon"><i aria-hidden="true" class="pbmit-base-icon-checked"></i></span>Strong QMS and data integrity</li>
+
+<li class="list-group-item">
+<span class="pbmit-icon-list-icon">
+<i aria-hidden="true" class="pbmit-base-icon-checked"></i>
+</span>Full traceability and compliance audits</li>
+
+<li class="list-group-item">
+<span class="pbmit-icon-list-icon">
+<i aria-hidden="true" class="pbmit-base-icon-checked"></i>
+</span>Regulatory confidence in every shipment</li>
+
+</ul>
+
+<p class="mt-3">Unit IV serves as EMNAR’s dedicated packaging and warehousing hub, with significant capacity—handling up to 500,000 fiber drums annually, available in various sizes to meet the diverse storage and transport needs of APIs and intermediates.</p>
+</div>
+</div>
+</div>
+
+</div>
+
+</section>
+</div>
+
+<?php include "footer.php" ?>
+
+</div>
+
+<?php include "bottomlinks.php" ?>
+
+</body>
+</html>

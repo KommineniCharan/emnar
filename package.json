@@ -1,0 +1,28 @@
+{
+  "name": "emnar-pharma-optimizer",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "optimize": "node scripts/optimize.js",
+    "serve:optimized": "npx serve optimized -l 8080",
+    "lhci": "npx lhci autorun"
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^4.0.3",
+    "cheerio": "^1.0.0-rc.12",
+    "fs-extra": "^11.1.1",
+    "glob": "^10.2.7",
+    "html-minifier-terser": "^7.0.0",
+    "imagemin": "^8.0.1",
+    "imagemin-webp": "^7.0.0",
+    "imagemin-avif": "^1.0.4",
+    "imagemin-mozjpeg": "^9.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "lighthouse": "^10.0.0",
+    "lhci": "^0.9.0",
+    "postcss": "^8.4.25",
+    "cssnano": "^6.0.1",
+    "sharp": "^0.32.4",
+    "terser": "^5.18.0"
+  }
+}

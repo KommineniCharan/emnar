@@ -1,0 +1,99 @@
+name: Website Optimization & Lighthouse CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout main branch
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Install Node.js (needed for optimization tools)
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    # Install required packages
+    - name: Install dependencies
+      run: |
+        npm install -g html-minifier terser clean-css-cli purgecss imagemin-cli imagemin-webp imagemin-avif posthtml-cli posthtml-lazyload
+
+    # Minify HTML
+    - name: Minify HTML files
+      run: |
+        find . -name "*.html" -o -name "*.php" | while read file; do
+          html-minifier --collapse-whitespace --remove-comments --minify-js true --minify-css true "$file" -o "$file"
+        done
+
+    # Minify JS
+    - name: Minify JavaScript
+      run: |
+        find js -name "*.js" | while read file; do
+          terser "$file" -c -m -o "$file"
+        done
+
+    # Minify CSS
+    - name: Minify CSS
+      run: |
+        find css -name "*.css" | while read file; do
+          cleancss -o "$file" "$file"
+        done
+
+    # Remove unused CSS (Bootstrap + custom)
+    - name: Purge unused CSS
+      run: |
+        purgecss --css css/*.css --content "**/*.html" "**/*.php" js/*.js --output css
+
+    # Add lazy loading to <img>
+    - name: Add lazy loading to images
+      run: |
+        find . -name "*.html" -o -name "*.php" | while read file; do
+          npx posthtml "$file" -o "$file" -u posthtml-lazyload
+        done
+
+    # Convert images to WebP & AVIF + compress originals
+    - name: Optimize images
+      run: |
+        mkdir -p optimized-images
+        imagemin images/* --plugin.webp.quality=80 --out-dir=images/webp
+        imagemin images/* --plugin.avif.quality=50 --out-dir=images/avif
+        imagemin images/* --out-dir=images
+
+    # Generate responsive srcset
+    - name: Generate responsive images
+      run: |
+        for img in images/*.{jpg,jpeg,png}; do
+          [ -f "$img" ] || continue
+          filename=$(basename "$img")
+          convert "$img" -resize 320 "images/320_$filename"
+          convert "$img" -resize 640 "images/640_$filename"
+          convert "$img" -resize 1024 "images/1024_$filename"
+        done
+
+    # Install Lighthouse CI
+    - name: Install Lighthouse CI
+      run: npm install -g @lhci/cli
+
+    # Run Lighthouse and check score
+    - name: Run Lighthouse
+      run: |
+        lhci autorun || exit 1
+      env:
+        LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # Push to optimized branch
+    - name: Push optimized files
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git checkout -B optimized
+        git add .
+        git commit -m "Optimized website"
+        git push origin optimized --force

@@ -1,0 +1,95 @@
+name: Website Optimization & Lighthouse CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  optimize-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          npm install -g html-minifier-terser cssnano uglify-js purgecss @squoosh/cli lighthouse
+
+      - name: Optimize HTML, CSS, and JS
+        run: |
+          mkdir optimized
+          cp -r emnar-pharma/* optimized/
+          # Minify HTML
+          find optimized -name "*.php" -o -name "*.html" | while read file; do
+            html-minifier-terser --collapse-whitespace --remove-comments --minify-css true --minify-js true -o "$file" "$file"
+          done
+          # Remove unused CSS
+          purgecss --css optimized/css/*.css --content optimized/**/*.php optimized/**/*.html --output optimized/css
+          # Minify CSS
+          for css in optimized/css/*.css; do
+            cssnano "$css" "$css"
+          done
+          # Minify JS
+          for js in optimized/js/*.js; do
+            uglifyjs "$js" -o "$js" --compress --mangle
+          done
+          # Optimize Images (to WebP & AVIF)
+          for img in optimized/images/*.{png,jpg,jpeg}; do
+            [ -f "$img" ] && npx @squoosh/cli --webp '{"quality":80}' --avif '{"quality":60}' "$img"
+          done
+
+      - name: Add lazy loading to images
+        run: |
+          find optimized -name "*.php" -o -name "*.html" | while read file; do
+            sed -i 's/<img /<img loading="lazy" /g' "$file"
+          done
+
+      - name: Generate responsive srcset
+        run: |
+          for img in optimized/images/*.{png,jpg,jpeg}; do
+            [ -f "$img" ] && npx @squoosh/cli --resize '{"width":320}' "$img" -o "${img%.*}-320.${img##*.}"
+            [ -f "$img" ] && npx @squoosh/cli --resize '{"width":640}' "$img" -o "${img%.*}-640.${img##*.}"
+            [ -f "$img" ] && npx @squoosh/cli --resize '{"width":1024}' "$img" -o "${img%.*}-1024.${img##*.}"
+          done
+
+      - name: Start local server
+        run: |
+          php -S localhost:8080 -t optimized > /dev/null 2>&1 &
+          sleep 5
+
+      - name: Auto-detect pages for Lighthouse
+        id: detect_pages
+        run: |
+          urls=()
+          while IFS= read -r file; do
+            relative_path="${file#optimized/}"
+            urls+=("http://localhost:8080/$relative_path")
+          done < <(find optimized -type f \( -name "*.php" -o -name "*.html" \))
+          echo "urls=${urls[*]}" >> $GITHUB_OUTPUT
+
+      - name: Run Lighthouse CI
+        run: |
+          IFS=' ' read -r -a url_array <<< "${{ steps.detect_pages.outputs.urls }}"
+          for url in "${url_array[@]}"; do
+            echo "Testing $url"
+            lighthouse "$url" --output=json --output-path=./lhreport.json --only-categories=performance,accessibility,best-practices,seo
+            score=$(jq '.categories.performance.score' lhreport.json)
+            score=$(echo "$score * 100" | bc)
+            if (( $(echo "$score < 90" | bc -l) )); then
+              echo "Performance score for $url is below 90 ($score). Failing."
+              exit 1
+            fi
+          done
+
+      - name: Push to optimized branch
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git checkout --orphan optimized
+          git rm -rf .
+          cp -r optimized/* .
+          git add .
+          git commit -m "Optimized site"
+          git push -f origin optimized
