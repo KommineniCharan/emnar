@@ -177,9 +177,11 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git checkout -B optimized
-          rm -rf *
+
+          git rm -r --cached .
           cp -r optimized/* .
-          rm -rf optimized
+          remove -rf optimized
+
           git add .
           git commit -m "🚀 Optimized website assets
 
@@ -189,6 +191,7 @@ jobs:
           - Added lazy loading to images
           - Purged unused CSS
           - Added preload for critical resources" || echo "No changes to commit"
+
           git push origin optimized --force
 
       - name: Upload optimization report
