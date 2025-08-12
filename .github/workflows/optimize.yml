@@ -180,7 +180,7 @@ jobs:
 
           git rm -r --cached .
           cp -r optimized/* .
-          remove -rf optimized
+          rm -rf optimized
 
           git add .
           git commit -m "🚀 Optimized website assets
