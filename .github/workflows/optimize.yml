@@ -24,8 +24,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Install global optimization tools
-          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli@0.7.1 cheerio
+          # Install global optimization tools (remove squoosh from global)
+          npm install -g html-minifier-terser clean-css-cli terser purgecss cheerio
+
+          # Install @squoosh/cli locally
+          npm install @squoosh/cli@0.7.1
 
           # Create package-lock.json if it doesn't exist
           if [ -f package.json ] && [ ! -f package-lock.json ]; then
@@ -129,7 +132,7 @@ jobs:
             find images -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | while read -r img; do
               echo "Optimizing image: $img"
               # Create WebP version
-              squoosh-cli \
+              npx squoosh-cli \
                 --webp '{"quality":85,"method":4,"sns_strength":50,"filter_strength":60,"segments":4,"pass":1,"alpha_quality":100,"use_sharp_yuv":0}' \
                 "$img" \
                 -d "$(dirname "$img")"
@@ -150,7 +153,7 @@ jobs:
               # Create responsive directories
               for size in 320 640 1024 1920; do
                 mkdir -p "images/$rel_dir/${size}w"
-                squoosh-cli \
+                npx squoosh-cli \
                   --resize "{\"width\":$size}" \
                   "$img" \
                   -d "images/$rel_dir/${size}w" \
