@@ -134,7 +134,7 @@ jobs:
           if [ -d images ]; then
             find images -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | while read -r img; do
               echo "Optimizing image: $img"
-              sharp "$img" --output "$(dirname "$img")/$(basename "$img" | sed 's/\.[^.]*$/.webp/')" --format webp
+              sharp --input "$img" --output "$(dirname "$img")/$(basename "$img" | sed 's/\.[^.]*$/.webp/')" --format webp
             done
           fi
 
