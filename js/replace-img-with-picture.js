@@ -20,25 +20,17 @@ function processHTMLorPHP(filePath) {
 
     const picture = $("<picture></picture>");
 
-    // WebP sources
+    // Only WebP sources
     sizes.forEach((size) => {
       picture.append(
         `<source srcset="${dirName}/${size}w/${baseName}_${size}w.webp" media="(max-width: ${size}px)" type="image/webp">`
       );
     });
 
-    // Fallback sources
-    sizes.forEach((size) => {
-      picture.append(
-        `<source srcset="${dirName}/${size}w/${baseName}_${size}w${ext}" media="(max-width: ${size}px)" type="image/${ext.replace(
-          ".",
-          ""
-        )}">`
-      );
-    });
-
-    // Fallback <img>
-    picture.append($.html($img));
+    // Fallback <img> using WebP
+    const imgFallback = $img.clone();
+    imgFallback.attr("src", `${dirName}/${baseName}.webp`);
+    picture.append(imgFallback);
 
     $img.replaceWith(picture);
   });
