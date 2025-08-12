@@ -106,11 +106,11 @@ jobs:
             done
           fi
 
-      - name: Convert Images to WebP
-        run: node js/convert-webp.js
-
       - name: Generate Responsive Images
         run: node js/resize-images.js
+
+      - name: Convert Images to WebP
+        run: node js/convert-webp.js
 
       - name: Replace <img> with <picture>
         run: node js/replace-img-with-picture.js
