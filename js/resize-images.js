@@ -1,30 +1,38 @@
 const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
-
-const inputDir = path.resolve("optimized/images");
-
-if (!fs.existsSync(inputDir)) {
-  console.log("Images directory does not exist:", inputDir);
-  process.exit(0);
-}
+const glob = require("glob");
 
 const sizes = [320, 640, 1024, 1920];
 
-fs.readdirSync(inputDir).forEach((file) => {
-  const ext = path.extname(file).toLowerCase();
-  if (![".jpg", ".jpeg", ".png"].includes(ext)) return;
+// Get absolute path to the current project directory
+const projectRoot = path.resolve(".");
 
-  const baseName = path.basename(file, ext);
+// Find all images inside any `images` folder in the project
+glob
+  .sync("**/images/**/*.{jpg,jpeg,png}", {
+    cwd: projectRoot,
+    nodir: true,
+    absolute: false, // keep relative for output naming
+  })
+  .forEach((relativePath) => {
+    const ext = path.extname(relativePath).toLowerCase();
+    const baseName = path.basename(relativePath, ext);
+    const dir = path.dirname(relativePath);
+    const absInputPath = path.join(projectRoot, relativePath); // ✅ absolute path for sharp
 
-  sizes.forEach((size) => {
-    const outputDir = path.join(inputDir, `${size}w`);
-    if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+    sizes.forEach((size) => {
+      const outputDir = path.join(projectRoot, dir, `${size}w`);
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
 
-    sharp(path.join(inputDir, file))
-      .resize(size)
-      .toFile(path.join(outputDir, `${baseName}_${size}w${ext}`))
-      .then(() => console.log(`Created: ${baseName}_${size}w${ext}`))
-      .catch((err) => console.error("Error processing", file, err));
+      sharp(absInputPath)
+        .resize(size)
+        .toFile(path.join(outputDir, `${baseName}_${size}w${ext}`))
+        .then(() => {
+          console.log(`Created: ${outputDir}/${baseName}_${size}w${ext}`);
+        })
+        .catch((err) => console.error("Error processing", absInputPath, err));
+    });
   });
-});
