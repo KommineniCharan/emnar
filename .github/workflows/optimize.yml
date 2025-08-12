@@ -103,8 +103,6 @@ jobs:
             find css -iname "*.css" | while read -r file; do
               echo "Minifying CSS: $file"
               cleancss \
-                --level 2 \
-                --format beautify \
                 --output "$file" \
                 "$file"
             done
