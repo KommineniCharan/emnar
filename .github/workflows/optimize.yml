@@ -112,6 +112,9 @@ jobs:
       - name: Generate Responsive Images
         run: node js/resize-images.js
 
+      - name: Replace <img> with <picture>
+        run: node js/replace-img-with-picture.js
+
       - name: Add Lazy Loading to Images
         run: |
           cd optimized
