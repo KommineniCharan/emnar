@@ -1,23 +1,38 @@
-const sharp = require("sharp");
-const fs = require("fs");
+// js/convert-webp.js
+const { exec } = require("child_process");
 const path = require("path");
+const glob = require("glob");
+const fs = require("fs");
+const { ImagePool } = require("@squoosh/lib");
+const imagePool = new ImagePool();
 
-const inputDir = path.resolve("optimized/images");
+(async () => {
+  const projectRoot = path.resolve(".");
+  const imageFiles = glob.sync("**/images/**/*.{jpg,jpeg,png}", {
+    cwd: projectRoot,
+    nodir: true,
+    absolute: true, // absolute for reading
+  });
 
-if (!fs.existsSync(inputDir)) {
-  console.log("Images directory does not exist:", inputDir);
-  process.exit(0);
-}
+  console.log(`Found ${imageFiles.length} images to convert to WebP`);
 
-fs.readdirSync(inputDir).forEach((file) => {
-  const ext = path.extname(file).toLowerCase();
-  if (![".jpg", ".jpeg", ".png"].includes(ext)) return;
+  for (const filePath of imageFiles) {
+    try {
+      const ext = path.extname(filePath).toLowerCase();
+      const baseName = path.basename(filePath, ext);
+      const dir = path.dirname(filePath);
+      const outputPath = path.join(dir, `${baseName}.webp`);
 
-  const outputFile = path.join(inputDir, file.replace(ext, ".webp"));
+      const image = imagePool.ingestImage(fs.readFileSync(filePath));
+      await image.encode({ webp: {} });
+      const webpBuffer = (await image.encodedWith.webp).binary;
+      fs.writeFileSync(outputPath, webpBuffer);
 
-  sharp(path.join(inputDir, file))
-    .toFormat("webp")
-    .toFile(outputFile)
-    .then(() => console.log(`Converted to WebP: ${outputFile}`))
-    .catch((err) => console.error("Error converting", file, err));
-});
+      console.log(`Converted: ${outputPath}`);
+    } catch (err) {
+      console.error(`Error converting ${filePath}:`, err);
+    }
+  }
+
+  await imagePool.close();
+})();
