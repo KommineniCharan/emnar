@@ -1,247 +1,111 @@
-name: Website Optimization
+name: Website Optimization with Advanced Steps
 
 on:
   push:
     branches:
       - main
-      - optimized
   workflow_dispatch:
 
 jobs:
   optimize:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: 18
 
       - name: Install dependencies
         run: |
-          # Install global optimization tools
-          npm install -g html-minifier-terser clean-css-cli terser purgecss @squoosh/cli cheerio
-          
-          # Create package-lock.json if it doesn't exist
-          if [ -f package.json ] && [ ! -f package-lock.json ]; then
-            npm install --package-lock-only
-          fi
-          
-          # Install local dependencies if package.json exists
-          if [ -f package.json ]; then
-            npm ci --prefer-offline --no-audit
-          fi
-          
-          # Verify tools are installed
-          echo "Verifying installed tools..."
-          html-minifier-terser --version || echo "html-minifier-terser not found"
-          cleancss --version || echo "cleancss not found"
-          terser --version || echo "terser not found"
-          purgecss --version || echo "purgecss not found"
+          npm install -g imagemin-cli imagemin-mozjpeg imagemin-pngquant cssnano terser purgecss sharp lighthouse @lighthouse-ci/cli critical
 
-      - name: Create optimized directory
-        run: mkdir -p optimized
-
-      - name: Copy files to optimized directory
+      # Resize images (example: resize all images to max width 1200px)
+      - name: Resize images with Sharp
         run: |
-          # Copy PHP files
-          cp -r *.php optimized/ 2>/dev/null || echo "No PHP files found"
-          
-          # Copy directories if they exist
-          [ -d css ] && cp -r css optimized/ || echo "CSS directory not found"
-          [ -d js ] && cp -r js optimized/ || echo "JS directory not found"
-          [ -d images ] && cp -r images optimized/ || echo "Images directory not found"
-          [ -d fonts ] && cp -r fonts optimized/ || echo "Fonts directory not found"
-          
-          # Copy HTML files if they exist
-          cp -r *.html optimized/ 2>/dev/null || echo "No HTML files found"
+          mkdir -p optimized/resized-images
+          node -e "
+            const sharp = require('sharp');
+            const fs = require('fs');
+            const path = require('path');
+            const inputDir = 'images';
+            const outputDir = 'optimized/resized-images';
+            fs.readdirSync(inputDir).forEach(file => {
+              const ext = path.extname(file).toLowerCase();
+              if (['.jpg', '.jpeg', '.png'].includes(ext)) {
+                sharp(path.join(inputDir, file))
+                  .resize({ width: 1200 })
+                  .toFile(path.join(outputDir, file))
+                  .catch(console.error);
+              }
+            });
+          "
 
-      - name: Minify HTML and PHP files
+      # Optimize resized images
+      - name: Optimize resized images
         run: |
-          cd optimized
-          find . \( -iname "*.html" -o -iname "*.php" \) -type f | while read -r file; do
-            if [ -f "$file" ]; then
-              echo "Minifying $file"
-              html-minifier-terser \
-                --collapse-whitespace \
-                --remove-comments \
-                --remove-optional-tags \
-                --remove-redundant-attributes \
-                --remove-script-type-attributes \
-                --remove-tag-whitespace \
-                --use-short-doctype \
-                --minify-js true \
-                --minify-css true \
-                --input "$file" \
-                --output "$file"
-            fi
-          done
+          mkdir -p optimized/images
+          imagemin "optimized/resized-images/*.{jpg,jpeg,png}" --plugin=mozjpeg --plugin=pngquant --out-dir=optimized/images
 
-      - name: Purge unused CSS
-        run: |
-          cd optimized
-          if [ -d css ]; then
-            find css -iname "*.css" | while read -r file; do
-              echo "Purging CSS: $file"
-              purgecss \
-                --css "$file" \
-                --content "**/*.php" "**/*.html" "**/*.js" \
-                --output "$(dirname "$file")" \
-                --rejected
-            done
-          fi
-
+      # Minify CSS
       - name: Minify CSS
         run: |
-          cd optimized
-          if [ -d css ]; then
-            find css -iname "*.css" | while read -r file; do
-              echo "Minifying CSS: $file"
-              cleancss \
-                --level 2 \
-                --format beautify \
-                --output "$file" \
-                "$file"
-            done
-          fi
-
-      - name: Minify JavaScript
-        run: |
-          cd optimized
-          if [ -d js ]; then
-            find js -iname "*.js" | while read -r file; do
-              echo "Minifying JS: $file"
-              terser \
-                "$file" \
-                --compress drop_console=true,drop_debugger=true \
-                --mangle \
-                --output "$file"
-            done
-          fi
-
-      - name: Optimize Images (WebP conversion)
-        run: |
-          cd optimized
-          if [ -d images ]; then
-            find images -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | while read -r img; do
-              echo "Optimizing image: $img"
-              # Create WebP version
-              npx @squoosh/cli \
-                --webp '{"quality":85,"method":4,"sns_strength":50,"filter_strength":60,"segments":4,"pass":1,"alpha_quality":100,"use_sharp_yuv":0}' \
-                "$img" \
-                -d "$(dirname "$img")"
-            done
-          fi
-
-      - name: Generate Responsive Images
-        run: |
-          cd optimized
-          if [ -d images ]; then
-            find images -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | while read -r img; do
-              echo "Generating responsive images for: $img"
-              rel_path="${img#images/}"
-              rel_dir=$(dirname "$rel_path")
-              base_name=$(basename "$img" | sed 's/\.[^.]*$//')
-              ext=$(echo "$img" | sed 's/.*\.//')
-              
-              # Create responsive directories
-              for size in 320 640 1024 1920; do
-                mkdir -p "images/$rel_dir/${size}w"
-                npx @squoosh/cli \
-                  --resize "{\"width\":$size}" \
-                  "$img" \
-                  -d "images/$rel_dir/${size}w" \
-                  -s "${base_name}.${ext}"
-              done
-            done
-          fi
-
-      - name: Add Lazy Loading to Images
-        run: |
-          cd optimized
-          find . \( -iname "*.html" -o -iname "*.php" \) -type f | while read -r file; do
-            echo "Adding lazy loading to: $file"
-            node -e "
-              const fs = require('fs');
-              const cheerio = require('cheerio');
-              
-              try {
-                let html = fs.readFileSync('$file', 'utf8');
-                const \$ = cheerio.load(html, { decodeEntities: false });
-                
-                \$('img').each((_, el) => {
-                  const \$img = \$(el);
-                  if (!\$img.attr('loading')) { \$img.attr('loading', 'lazy'); }
-                  if (!\$img.attr('decoding')) { \$img.attr('decoding', 'async'); }
-                });
-                
-                fs.writeFileSync('$file', \$.html());
-              } catch (error) {
-                console.log('Error processing $file:', error.message);
-              }
-            "
+          mkdir -p optimized/css
+          for file in css/*.css; do
+            npx cssnano "$file" "optimized/css/$(basename $file)"
           done
 
-      - name: Add preload for critical resources
+      # Minify JS
+      - name: Minify JS
         run: |
-          cd optimized
-          find . \( -iname "*.html" -o -iname "*.php" \) -type f | while read -r file; do
-            echo "Adding preload links to: $file"
-            node -e "
-              const fs = require('fs');
-              const cheerio = require('cheerio');
-              try {
-                let html = fs.readFileSync('$file', 'utf8');
-                const \$ = cheerio.load(html, { decodeEntities: false });
-                if (\$('link[rel=\"stylesheet\"]').length > 0) {
-                  \$('link[rel=\"stylesheet\"]').first().before('<link rel=\"preload\" href=\"css/style.css\" as=\"style\" onload=\"this.onload=null;this.rel=\\\"stylesheet\\\"\">');
-                }
-                fs.writeFileSync('$file', \$.html());
-              } catch (error) { console.log('Error processing $file:', error.message); }
-            "
+          mkdir -p optimized/js
+          for file in js/*.js; do
+            npx terser "$file" -o "optimized/js/$(basename $file)" --compress --mangle
           done
 
-      - name: Create optimization report
+      # Purge unused CSS
+      - name: Purge unused CSS
         run: |
-          cd optimized
-          echo "# Website Optimization Report" > optimization-report.md
-          echo "Generated on: $(date)" >> optimization-report.md
-          echo "" >> optimization-report.md
-          echo "## File Counts:" >> optimization-report.md
-          echo "- PHP files: $(find . -name \"*.php\" | wc -l)" >> optimization-report.md
-          echo "- CSS files: $(find . -name \"*.css\" | wc -l)" >> optimization-report.md
-          echo "- JS files: $(find . -name \"*.js\" | wc -l)" >> optimization-report.md
-          echo "- Images: $(find images -type f \( -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.png\" -o -iname \"*.webp\" \) | wc -l)" >> optimization-report.md
-          echo "" >> optimization-report.md
-          echo "## Total Size:" >> optimization-report.md
-          echo "- Total size: $(du -sh . | cut -f1)" >> optimization-report.md
+          npx purgecss --css css/*.css --content index.html --output optimized/css/purged
 
-      - name: Commit and push optimized files
+      # Extract critical CSS (for index.html example)
+      - name: Extract Critical CSS
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git checkout -B optimized
-          rm -rf *
-          cp -r optimized/* .
-          rm -rf optimized
-          git add .
-          git commit -m "🚀 Optimized website assets
+          npx critical index.html --inline --minify --extract --base ./ --dest optimized/index.html
 
-          - Minified HTML, CSS, and JavaScript
-          - Optimized images with WebP conversion
-          - Generated responsive images
-          - Added lazy loading to images
-          - Purged unused CSS
-          - Added preload for critical resources" || echo "No changes to commit"
-          git push origin optimized --force
+      # Cache busting (add hash to CSS and JS filenames)
+      - name: Cache Busting - Add hashes to CSS & JS files
+        run: |
+          mkdir -p optimized/hash-css optimized/hash-js
+          for file in optimized/css/*.css; do
+            HASH=$(sha256sum "$file" | cut -c1-8)
+            BASENAME=$(basename "$file" .css)
+            cp "$file" "optimized/hash-css/${BASENAME}.${HASH}.css"
+          done
+          for file in optimized/js/*.js; do
+            HASH=$(sha256sum "$file" | cut -c1-8)
+            BASENAME=$(basename "$file" .js)
+            cp "$file" "optimized/hash-js/${BASENAME}.${HASH}.js"
+          done
 
-      - name: Upload optimization report
-        uses: actions/upload-artifact@v4
-        with:
-          name: optimization-report
-          path: optimization-report.md
+      # Run Lighthouse CI for audit (on index.html served via a simple HTTP server)
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli
+          npx http-server -p 8080 &
+          sleep 5
+          lhci autorun --url=http://localhost:8080/index.html --upload.target=temporary-public-storage
+
+      # Optional: Commit optimized files
+      - name: Commit optimized files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions Bot"
+          git add optimized/
+          git commit -m "Add advanced website optimizations"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
