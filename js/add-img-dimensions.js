@@ -1,67 +1,56 @@
+// js/add-img-dimensions.js
 const fs = require("fs");
 const path = require("path");
 const glob = require("glob");
-const sharp = require("sharp");
 const cheerio = require("cheerio");
+const sharp = require("sharp");
 
-const projectRoot = path.resolve("."); // current project directory
+const projectRoot = path.resolve(".");
+const files = glob.sync("**/*.{html,php}", {
+  cwd: projectRoot,
+  absolute: true,
+});
 
-async function addImageDimensionsToFile(file) {
-  let content = fs.readFileSync(file, "utf8");
-  const $ = cheerio.load(content, { decodeEntities: false });
-  let modified = false;
+async function addDimensions() {
+  for (const file of files) {
+    let html = fs.readFileSync(file, "utf8");
+    const $ = cheerio.load(html, { decodeEntities: false });
+    let modified = false;
 
-  $("img").each(function () {
-    const $img = $(this);
-    if ($img.attr("width") && $img.attr("height")) return; // skip if already present
+    const imgs = $("img");
+    for (let i = 0; i < imgs.length; i++) {
+      const img = imgs[i];
+      const $img = $(img);
 
-    let src = $img.attr("src");
-    if (!src) return;
+      if (!$img.attr("width") || !$img.attr("height")) {
+        let src = $img.attr("src");
+        if (!src) continue;
 
-    // Make src absolute relative to the current file
-    const imgPath = path.resolve(path.dirname(file), src);
+        // Resolve relative to file location
+        const imgPath = path.resolve(
+          path.dirname(file),
+          src.split("?")[0].split("#")[0]
+        );
+        if (!fs.existsSync(imgPath)) continue;
 
-    if (fs.existsSync(imgPath)) {
-      try {
-        const metadata = sharp(imgPath).metadata
-          ? sharp(imgPath).metadata()
-          : null;
-
-        // Use async metadata call to get width and height
-        metadata
-          .then((meta) => {
-            if (meta && meta.width && meta.height) {
-              $img.attr("width", meta.width);
-              $img.attr("height", meta.height);
-              modified = true;
-
-              fs.writeFileSync(file, $.html(), "utf8");
-              console.log(`Added dimensions to ${src} in ${file}`);
-            }
-          })
-          .catch((err) => {
-            console.warn(`Error reading metadata for ${imgPath}:`, err.message);
-          });
-      } catch (err) {
-        console.warn(`Error processing ${imgPath}:`, err.message);
+        try {
+          const metadata = await sharp(imgPath).metadata();
+          if (metadata.width && metadata.height) {
+            $img.attr("width", metadata.width);
+            $img.attr("height", metadata.height);
+            modified = true;
+          }
+        } catch {
+          // ignore errors for missing or unreadable images
+        }
       }
     }
-  });
 
-  if (modified) {
-    fs.writeFileSync(file, $.html(), "utf8");
+    if (modified) {
+      fs.writeFileSync(file, $.html(), "utf8");
+      console.log(`Updated dimensions in: ${file}`);
+    }
   }
 }
 
-async function main() {
-  const htmlFiles = glob.sync(`${projectRoot}/**/*.{html,php}`, {
-    nodir: true,
-  });
-
-  for (const file of htmlFiles) {
-    await addImageDimensionsToFile(file);
-  }
-  console.log("✅ Completed adding image dimensions.");
-}
-
-main();
+addDimensions().catch(console.error);
