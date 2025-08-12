@@ -27,13 +27,13 @@
     "glob": "^10.2.7",
     "html-minifier-terser": "^7.0.0",
     "imagemin": "^8.0.1",
-    "imagemin-webp": "^7.0.0",
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-pngquant": "^9.0.2",
+    "imagemin-webp": "^7.0.0",
     "lighthouse": "^10.0.0",
     "postcss": "^8.4.25",
     "purgecss": "^5.0.0",
-    "sharp": "^0.32.4",
+    "sharp": "^0.32.6",
     "terser": "^5.18.0"
   },
   "engines": {
@@ -42,7 +42,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/emnar-pharma.git"
+    "url": "https://github.com/KommineniCharan/emnar.git"
   },
   "keywords": [
     "website-optimization",
