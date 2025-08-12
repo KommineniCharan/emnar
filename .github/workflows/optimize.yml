@@ -149,14 +149,10 @@ jobs:
               base_name=$(basename "$img" | sed 's/\.[^.]*$//')
               ext=$(echo "$img" | sed 's/.*\.//')
 
-              # Create responsive directories
+              # Create responsive directories and images using sharp-cli
               for size in 320 640 1024 1920; do
                 mkdir -p "images/$rel_dir/${size}w"
-                npx squoosh-cli \
-                  --resize "{\"width\":$size}" \
-                  "$img" \
-                  -d "images/$rel_dir/${size}w" \
-                  -s "${base_name}.${ext}"
+                sharp --input "$img" --output "images/$rel_dir/${size}w/${base_name}_${size}w.${ext}" --resize width=$size
               done
             done
           fi
