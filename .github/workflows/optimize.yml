@@ -30,6 +30,9 @@ jobs:
           # Install @squoosh/cli locally (not globally)
           npm install @squoosh/cli@0.7.1
 
+          # Install sharp-cli globally
+          npm install -g sharp-cli
+
           # Create package-lock.json if it doesn't exist
           if [ -f package.json ] && [ ! -f package-lock.json ]; then
             npm install --package-lock-only
@@ -131,11 +134,7 @@ jobs:
           if [ -d images ]; then
             find images -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | while read -r img; do
               echo "Optimizing image: $img"
-              # Create WebP version
-              npx squoosh-cli \
-                --webp '{"quality":85,"method":4,"sns_strength":50,"filter_strength":60,"segments":4,"pass":1,"alpha_quality":100,"use_sharp_yuv":0}' \
-                "$img" \
-                -d "$(dirname "$img")"
+              sharp "$img" --webp -o "$(dirname "$img")/$(basename "$img" | sed 's/\.[^.]*$/.webp/')"
             done
           fi
 
