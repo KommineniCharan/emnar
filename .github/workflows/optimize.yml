@@ -152,7 +152,7 @@ jobs:
               # Create responsive directories and images using sharp-cli
               for size in 320 640 1024 1920; do
                 mkdir -p "images/$rel_dir/${size}w"
-                sharp --input "$img" --output "images/$rel_dir/${size}w/${base_name}_${size}w.${ext}" --resize width=$size
+                sharp --input "$img" --output "images/$rel_dir/${size}w/${base_name}_${size}w.${ext}" --resize ${size}x
               done
             done
           fi
