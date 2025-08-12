@@ -129,7 +129,7 @@ jobs:
             find images -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | while read -r img; do
               echo "Optimizing image: $img"
               # Create WebP version
-              npx @squoosh/cli \
+              squoosh-cli \
                 --webp '{"quality":85,"method":4,"sns_strength":50,"filter_strength":60,"segments":4,"pass":1,"alpha_quality":100,"use_sharp_yuv":0}' \
                 "$img" \
                 -d "$(dirname "$img")"
@@ -146,11 +146,11 @@ jobs:
               rel_dir=$(dirname "$rel_path")
               base_name=$(basename "$img" | sed 's/\.[^.]*$//')
               ext=$(echo "$img" | sed 's/.*\.//')
-              
+
               # Create responsive directories
               for size in 320 640 1024 1920; do
                 mkdir -p "images/$rel_dir/${size}w"
-                npx @squoosh/cli \
+                squoosh-cli \
                   --resize "{\"width\":$size}" \
                   "$img" \
                   -d "images/$rel_dir/${size}w" \
